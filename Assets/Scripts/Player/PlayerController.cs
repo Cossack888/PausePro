@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour
     public WallRun WallRun => wallRun;
     public Dash Dash => dash;
     public Crouching Crouching => crouching;
+    public Transform Cam => cam;
     public IMovement CurrentMovement => currentMovement;
     void Start()
     {
