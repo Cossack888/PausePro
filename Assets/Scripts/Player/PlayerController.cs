@@ -1,3 +1,4 @@
+using System.Diagnostics.Contracts;
 using TMPro;
 using UnityEngine;
 
@@ -36,12 +37,16 @@ public class PlayerController : MonoBehaviour
     [Header("Crouch Settings")]
     [SerializeField] private Mesh sphere;
     [SerializeField] private Mesh capsule;
+    [Header("Combat Settings")]
+    [SerializeField] Animator leftHand;
+    [SerializeField] Animator rightHand;
     private RegularMovement regularMovement;
     private Jumping jumping;
     private Somersault somersault;
     private WallRun wallRun;
     private Dash dash;
     private Crouching crouching;
+    private Attacking attacking;
     private float cameraPitch;
     private Transform cam;
     public float GroundDistance => groundDistance;
@@ -69,7 +74,10 @@ public class PlayerController : MonoBehaviour
     public WallRun WallRun => wallRun;
     public Dash Dash => dash;
     public Crouching Crouching => crouching;
+    public Attacking Attacking => attacking;
     public Transform Cam => cam;
+    public Animator LeftHand => leftHand;
+    public Animator RightHand => rightHand;
     public IMovement CurrentMovement => currentMovement;
     void Start()
     {
@@ -84,6 +92,7 @@ public class PlayerController : MonoBehaviour
         wallRun = new WallRun(rb, transform, this, action);
         dash = new Dash(rb, transform, this, action);
         crouching = new Crouching(rb, transform, this, action);
+        attacking = new Attacking(rb, transform, this, action);
         SetMovement(regularMovement);
     }
     private void OnCollisionEnter(Collision collision)

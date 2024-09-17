@@ -7,6 +7,7 @@ public class RegularMovement : MovementType
     {
         action.OnJumpGlobal += Jump;
         action.OnDashGlobal += Dash;
+        action.OnAttackGlobal += Attack;
     }
     public override void EnterMovement()
     {
@@ -45,10 +46,18 @@ public class RegularMovement : MovementType
             playerController.SetMovement(playerController.Dash);
         }
     }
+    public void Attack()
+    {
+        if (playerController.CurrentMovement == this)
+        {
+            playerController.SetMovement(playerController.Attacking);
+        }
+    }
 
     ~RegularMovement()
     {
         playerAction.OnJumpGlobal -= Jump;
         playerAction.OnDashGlobal -= Dash;
+        playerAction.OnAttackGlobal -= Attack;
     }
 }

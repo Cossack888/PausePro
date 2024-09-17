@@ -11,6 +11,7 @@ public class PlayerAction : MonoBehaviour
     public event PlayerActionPerformed OnExitGlobal;
     public event PlayerActionPerformed OnResetGlobal;
     public event PlayerActionPerformed OnShootGlobal;
+    public event PlayerActionPerformed OnAttackGlobal;
     private Vector2 movementVector;
     private float mouseX;
     private float mouseY;
@@ -38,6 +39,7 @@ public class PlayerAction : MonoBehaviour
         bindings.Player.Exit.performed += OnExit;
         bindings.Player.ResetGame.performed += OnReset;
         bindings.Player.Shoot.performed += OnShoot;
+        bindings.Player.Attack.performed += OnAttack;
     }
     public void OnDisable()
     {
@@ -52,6 +54,7 @@ public class PlayerAction : MonoBehaviour
         bindings.Player.Exit.performed -= OnExit;
         bindings.Player.ResetGame.performed -= OnReset;
         bindings.Player.Shoot.performed -= OnShoot;
+        bindings.Player.Attack.performed -= OnAttack;
     }
     public void OnJump(InputAction.CallbackContext context)
     {
@@ -82,6 +85,10 @@ public class PlayerAction : MonoBehaviour
     public void OnReset(InputAction.CallbackContext context)
     {
         if (context.performed) { OnResetGlobal?.Invoke(); }
+    }
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed) { OnAttackGlobal?.Invoke(); }
     }
 
     private void OnScroll(InputAction.CallbackContext context)

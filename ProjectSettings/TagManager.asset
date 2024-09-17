@@ -6,6 +6,10 @@ TagManager:
   tags:
   - platform
   - Ground
+  - Fire
+  - Destructable
+  - Enemy
+  - Throwable
   layers:
   - Default
   - TransparentFX
