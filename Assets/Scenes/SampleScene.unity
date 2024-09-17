@@ -1874,8 +1874,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   groundCheck: {fileID: 1772933336}
-  feetCheck: {fileID: 0}
-  headCheck: {fileID: 0}
+  currentY: 0
   wallMask:
     serializedVersion: 2
     m_Bits: 0

@@ -33,15 +33,13 @@ public abstract class MovementType : IMovement
 
     protected bool StuckToLeftSide()
     {
-        bool isStuckBack = Physics.Raycast(playerTransform.position, -playerTransform.forward, out RaycastHit hitForward, playerController.WallDistance, playerController.WallMask);
         bool isStuckLeft = Physics.Raycast(playerTransform.position, -playerTransform.right, out RaycastHit hitRight, playerController.WallDistance, playerController.WallMask);
-        return isStuckBack || isStuckLeft;
+        return isStuckLeft;
     }
     protected bool StuckToRightSide()
     {
-        bool isStuckForward = Physics.Raycast(playerTransform.position, playerTransform.forward, out RaycastHit hitForward, playerController.WallDistance, playerController.WallMask);
         bool isStuckRight = Physics.Raycast(playerTransform.position, playerTransform.right, out RaycastHit hitRight, playerController.WallDistance, playerController.WallMask);
-        return isStuckForward || isStuckRight;
+        return isStuckRight;
     }
     protected bool Falling()
     {

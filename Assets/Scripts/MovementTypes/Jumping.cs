@@ -15,6 +15,7 @@ public class Jumping : MovementType
     private bool isAscending;
     private bool isAtPeak;
     private bool doubleJumped;
+    private bool landed;
     public override void EnterMovement()
     {
         initialYPosition = playerRigidbody.position.y;
@@ -22,11 +23,12 @@ public class Jumping : MovementType
         currentYVelocity = 0f;
         isAscending = true;
         isAtPeak = false;
+        landed = true;
         momentum.ModifyMomentum(-0.1f);
     }
     public override void UpdateMovement()
     {
-        if (IsGrounded() && Falling())
+        if (IsGrounded() && Falling() && !landed)
         {
             doubleJumped = false;
             Landed();
@@ -57,10 +59,8 @@ public class Jumping : MovementType
     }
     public void Landed()
     {
-        if (IsGrounded())
-        {
-            playerController.SetMovement(playerController.RegularMovement);
-        }
+        landed = true;
+        playerController.SetMovement(playerController.RegularMovement);
     }
     public void WallRun()
     {
@@ -91,6 +91,7 @@ public class Jumping : MovementType
         }
         else if (isAtPeak)
         {
+            landed = false;
             currentYVelocity -= playerController.JumpForce * Time.deltaTime;
             if (currentYVelocity <= 0)
             {
@@ -103,7 +104,6 @@ public class Jumping : MovementType
         }
         targetVelocity.y = currentYVelocity;
         playerRigidbody.velocity = targetVelocity;
-
     }
     void DoubleJump()
     {

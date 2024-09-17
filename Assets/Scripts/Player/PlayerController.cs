@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -28,8 +29,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundDistance;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private Transform groundCheck;
-    [SerializeField] private Transform feetCheck;
-    [SerializeField] private Transform headCheck;
+    public float currentY;
     [Header("WallRun Settings")]
     [SerializeField] private LayerMask wallMask;
     [SerializeField] private float wallDistance;
@@ -63,8 +63,6 @@ public class PlayerController : MonoBehaviour
     public Mesh Sphere => sphere;
     public Mesh Capsule => capsule;
     public Transform GroundCheck => groundCheck;
-    public Transform FeetCheck => feetCheck;
-    public Transform HeadCheck => headCheck;
     public RegularMovement RegularMovement => regularMovement;
     public Jumping Jumping => jumping;
     public Somersault Somersault => somersault;
@@ -98,7 +96,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         currentMovement?.UpdateMovement();
-
     }
     private void FixedUpdate()
     {

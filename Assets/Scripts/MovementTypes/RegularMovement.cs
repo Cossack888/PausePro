@@ -8,6 +8,10 @@ public class RegularMovement : MovementType
         action.OnJumpGlobal += Jump;
         action.OnDashGlobal += Dash;
     }
+    public override void EnterMovement()
+    {
+        playerRigidbody.velocity = new Vector3(0, 0, 0);
+    }
     public override void UpdateMovement()
     {
         movement = new Vector3(playerAction.Movement.x, 0f, playerAction.Movement.y);
