@@ -10,6 +10,7 @@ public class PlayerAction : MonoBehaviour
     public event PlayerActionPerformed OnDashGlobal;
     public event PlayerActionPerformed OnExitGlobal;
     public event PlayerActionPerformed OnResetGlobal;
+    public event PlayerActionPerformed OnShootGlobal;
     private Vector2 movementVector;
     private float mouseX;
     private float mouseY;
@@ -36,6 +37,7 @@ public class PlayerAction : MonoBehaviour
         bindings.Player.Crouch.canceled += OnCrouch;
         bindings.Player.Exit.performed += OnExit;
         bindings.Player.ResetGame.performed += OnReset;
+        bindings.Player.Shoot.performed += OnShoot;
     }
     public void OnDisable()
     {
@@ -49,6 +51,7 @@ public class PlayerAction : MonoBehaviour
         bindings.Player.Crouch.canceled -= OnCrouch;
         bindings.Player.Exit.performed -= OnExit;
         bindings.Player.ResetGame.performed -= OnReset;
+        bindings.Player.Shoot.performed -= OnShoot;
     }
     public void OnJump(InputAction.CallbackContext context)
     {
@@ -84,6 +87,10 @@ public class PlayerAction : MonoBehaviour
     private void OnScroll(InputAction.CallbackContext context)
     {
         scrollAmount += Mathf.Clamp(context.ReadValue<float>(), -1, 1);
+    }
+    private void OnShoot(InputAction.CallbackContext context)
+    {
+        if (context.performed) { OnShootGlobal?.Invoke(); }
     }
     public void OnSprint(InputAction.CallbackContext context)
     {
