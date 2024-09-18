@@ -98,13 +98,9 @@ public class GhostForm : MovementType
                 NavMeshAgent navMeshAgent = hit.collider.GetComponent<NavMeshAgent>();
                 EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
                 Rigidbody rb = hitObject.GetComponent<Rigidbody>();
-
-                // Save force data and the components to be disabled
                 Vector3 forceDirection = (hit.point - start).normalized;
                 savedForces.Add(new ForceData(rb, hitObject, forceDirection, hit.point, navMeshAgent, enemy));
-
                 Debug.Log(savedForces.Count);
-                // Mark object as "pushed"
             }
         }
     }
@@ -113,7 +109,6 @@ public class GhostForm : MovementType
     {
         foreach (ForceData forceData in savedForces)
         {
-            // Disable NavMeshAgent and EnemyAI if they exist
             if (forceData.navMeshAgent != null)
             {
                 forceData.navMeshAgent.enabled = false;
@@ -122,16 +117,10 @@ public class GhostForm : MovementType
             {
                 forceData.enemy.enabled = false;
             }
-
-            // Make Rigidbody non-kinematic
             forceData.rb.isKinematic = false;
-
-            // Apply the saved force
             forceData.rb.AddForceAtPosition(forceData.forceDirection * 10, forceData.hitPoint, ForceMode.Impulse);
             forceData.interactionObject.Push();
         }
-
-        // Clear the list after applying all forces
         savedForces.Clear();
     }
 
