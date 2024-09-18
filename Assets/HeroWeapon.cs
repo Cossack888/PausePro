@@ -7,11 +7,21 @@ public class HeroWeapon : MonoBehaviour
 {
     bool damageDealt;
     [SerializeField] GameObject bloodEffect;
-    Collider col;
+    public MeshCollider col;
     private void Start()
     {
-        col = GetComponent<Collider>();
+        col = GetComponent<MeshCollider>();
     }
+
+    public void DeactivateWeapon()
+    {
+        col.enabled = false;
+    }
+    public void ActivateWeapon()
+    {
+        col.enabled = true;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))

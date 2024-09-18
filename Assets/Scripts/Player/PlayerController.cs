@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float mouseSentitvityX;
     [SerializeField] private float mouseSentitvityY;
     [SerializeField] private float smoothingFactor = 0.2f;
+    [SerializeField] private Camera normalCam;
+    [SerializeField] private Camera ghostCam;
     private float prevMouseX;
     private float prevMouseY;
     [Header("Player Settings")]
@@ -80,6 +82,8 @@ public class PlayerController : MonoBehaviour
     public Crouching Crouching => crouching;
     public Attacking Attacking => attacking;
     public Transform Cam => cam;
+    public Camera NormalCam => normalCam;
+    public Camera GhostCam => ghostCam;
     public GhostForm GhostForm => ghostForm;
     public Animator LeftHand => leftHand;
     public Animator RightHand => rightHand;
@@ -88,7 +92,7 @@ public class PlayerController : MonoBehaviour
     public IMovement CurrentMovement => currentMovement;
     void Start()
     {
-        cam = GameObject.FindObjectOfType<Camera>().transform;
+        SwitchCamera(NormalCam);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         rb = GetComponent<Rigidbody>();
@@ -121,6 +125,10 @@ public class PlayerController : MonoBehaviour
     private void LateUpdate()
     {
         UpdateCamera();
+    }
+    public void SwitchCamera(Camera cam)
+    {
+        this.cam = cam.transform;
     }
     public void SetMovement(IMovement newMovement)
     {

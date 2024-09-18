@@ -20,11 +20,24 @@ public class GhostForm : MovementType
     {
         timer = 0;
         playerRigidbody.useGravity = false;
+        playerController.GhostCam.gameObject.SetActive(true);
+        playerController.SwitchCamera(playerController.GhostCam);
+        foreach (Animator anim in GameObject.FindObjectsOfType<Animator>())
+        {
+            if (anim.gameObject.GetComponent<EnemyAI>() != null)
+            {
+                anim.SetBool("Stopped", true);
+            }
+        }
+        foreach (EnemyAI enemy in GameObject.FindObjectsOfType<EnemyAI>())
+        {
+            enemy.isStationary = true;
+        }
     }
 
     public override void FixedUpdateMovement()
     {
-        Vector3 cameraForward = Camera.main.transform.forward;
+        Vector3 cameraForward = playerController.Cam.transform.forward;
         Vector3 localMovement = new Vector3(movement.x, 0, 0);
         Vector3 worldMovement = playerTransform.TransformDirection(localMovement);
         Vector3 verticalMovement = cameraForward * movement.z;
@@ -50,6 +63,17 @@ public class GhostForm : MovementType
     public override void ExitMovement()
     {
         playerRigidbody.useGravity = true;
+        foreach (Animator anim in GameObject.FindObjectsOfType<Animator>())
+        {
+            if (anim.gameObject.GetComponent<EnemyAI>() != null)
+            {
+                anim.SetBool("Stopped", false);
+            }
+        }
+        foreach (EnemyAI enemy in GameObject.FindObjectsOfType<EnemyAI>())
+        {
+            enemy.isStationary = false;
+        }
     }
 
     public void ApplyForce()
@@ -87,7 +111,7 @@ public class GhostForm : MovementType
     public void SaveForce()
     {
         Vector3 start = playerTransform.position;
-        Vector3 direction = Camera.main.transform.forward;
+        Vector3 direction = playerController.Cam.transform.forward;
         Debug.DrawRay(start, direction * playerController.GhostInteractionDistance, Color.red);
 
         if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
@@ -129,6 +153,8 @@ public class GhostForm : MovementType
         if (playerController.CurrentMovement == this && timer > 1)
         {
             playerController.SetMovement(playerController.RegularMovement);
+            playerController.GhostCam.gameObject.SetActive(false);
+            playerController.SwitchCamera(playerController.NormalCam);
         }
     }
 

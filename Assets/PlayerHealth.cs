@@ -1,15 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
-public class Health : MonoBehaviour
+public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] private float maxHealth;
     private float currentHealth;
-    Animator anim;
+    public TMP_Text deathText;
     private void Start()
     {
-        anim = GetComponent<Animator>();
         currentHealth = maxHealth;
     }
     public void TakeDamage(float damage)
@@ -19,13 +19,10 @@ public class Health : MonoBehaviour
         {
             Die();
         }
-        else
-        {
-            anim.SetTrigger("Hit");
-        }
+
     }
     public void Die()
     {
-        Destroy(gameObject);
+        deathText.enabled = true;
     }
 }

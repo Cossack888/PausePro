@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;  // This is optional but often used for collections like List<T>
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public abstract class EnemyAI : MonoBehaviour
 {
     public Transform player;
-    protected Animator anim;
+    public Animator anim;
     [SerializeField] protected float throwDistance;
     [SerializeField] protected float throwSpeed;
     [SerializeField] protected float attackDistance;
+    [SerializeField] protected float noticeDistance;
     protected NavMeshAgent agent;
     protected bool isThrowing = false;
     protected Coroutine throwCoroutine = null;
@@ -23,8 +25,8 @@ public abstract class EnemyAI : MonoBehaviour
     protected bool isAttacking = false;
     protected float distanceToPlayer;
     PlayerController playerController;
-    [SerializeField] protected bool isStationary = false;
-
+    public bool isStationary = false;
+    [SerializeField] protected Collider col;
     protected virtual void Start()
     {
         anim = GetComponent<Animator>();
@@ -42,18 +44,32 @@ public abstract class EnemyAI : MonoBehaviour
     }
     protected virtual void Update()
     {
+        if (isStationary)
+        {
+            agent.isStopped = true;
+            return;
+        }
 
         distanceToPlayer = Vector3.Distance(player.position, transform.position);
-        if (distanceToPlayer > throwDistance)
+        if (distanceToPlayer < noticeDistance)
         {
-            HandleMovement();
+            if (distanceToPlayer > throwDistance)
+            {
+                HandleMovement();
+            }
+            else
+            {
+                HandleCombat(distanceToPlayer);
+            }
         }
         else
         {
-            HandleCombat(distanceToPlayer);
+            agent.isStopped = true;
         }
 
     }
+
+
 
     protected abstract void Block();
     protected abstract void HandleMovement();
@@ -102,6 +118,10 @@ public abstract class EnemyAI : MonoBehaviour
         if (isAttacking)
         {
             isAttacking = false;
+            if (col)
+            {
+                col.enabled = false;
+            }
         }
     }
 

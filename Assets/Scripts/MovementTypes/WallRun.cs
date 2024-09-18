@@ -47,22 +47,15 @@ public class WallRun : MovementType
 
     private void DetermineWallRunDirection()
     {
-        if (Physics.Raycast(playerTransform.position, -playerTransform.forward, playerController.WallDistance, playerController.WallMask))
+        if (Physics.Raycast(playerTransform.position, -playerTransform.right, playerController.WallDistance, playerController.WallMask))
         {
-            wallRunDirection = Vector3.Cross(wallNormal, Vector3.up).normalized;
+            wallRunDirection = Vector3.Cross(wallNormal, Vector3.up.normalized);
         }
-        else if (Physics.Raycast(playerTransform.position, playerTransform.forward, playerController.WallDistance, playerController.WallMask))
-        {
-            wallRunDirection = Vector3.Cross(Vector3.up, wallNormal).normalized;
-        }
-        else if (Physics.Raycast(playerTransform.position, -playerTransform.up, playerController.WallDistance, playerController.WallMask))
-        {
-            wallRunDirection = Vector3.Cross(wallNormal, Vector3.up).normalized;
-        }
-        else if (Physics.Raycast(playerTransform.position, playerTransform.up, playerController.WallDistance, playerController.WallMask))
+        else if (Physics.Raycast(playerTransform.position, playerTransform.right, playerController.WallDistance, playerController.WallMask))
         {
             wallRunDirection = Vector3.Cross(Vector3.up, wallNormal).normalized;
         }
+
     }
 
     public void SwitchSides()
@@ -123,7 +116,7 @@ public class WallRun : MovementType
         playerRigidbody.MovePosition(newPosition);
         float distanceToTarget = Vector3.Distance(playerTransform.position, forwardTargetPosition);
 
-        if (distanceToTarget < 0.2f || t >= 1f)
+        if (distanceToTarget < 0.7f || t >= 1f)
         {
             isSwitchingSides = false;
             InitializeWallRun();
@@ -156,28 +149,14 @@ public class WallRun : MovementType
         wallNormal = Vector3.zero;
         RaycastHit hit;
         float rayLength = playerController.WallDistance;
-        Vector3 rightDirection = playerTransform.forward;
+        Vector3 rightDirection = playerTransform.right;
         if (Physics.Raycast(playerTransform.position, rightDirection, out hit, rayLength, playerController.WallMask))
         {
             wallNormal = hit.normal;
             return true;
         }
-        Vector3 leftDirection = -playerTransform.forward;
+        Vector3 leftDirection = -playerTransform.right;
         if (Physics.Raycast(playerTransform.position, leftDirection, out hit, rayLength, playerController.WallMask))
-        {
-            wallNormal = hit.normal;
-            return true;
-        }
-
-        Vector3 frontDirection = playerTransform.right;
-        if (Physics.Raycast(playerTransform.position, frontDirection, out hit, rayLength, playerController.WallMask))
-        {
-            wallNormal = hit.normal;
-            return true;
-        }
-
-        Vector3 behindDirection = -playerTransform.right;
-        if (Physics.Raycast(playerTransform.position, behindDirection, out hit, rayLength, playerController.WallMask))
         {
             wallNormal = hit.normal;
             return true;
@@ -195,9 +174,9 @@ public class WallRun : MovementType
     {
         if (wallRunDirection != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(wallRunDirection, Vector3.forward);
+            Quaternion targetRotation = Quaternion.LookRotation(wallRunDirection, Vector3.up);
             targetRotation = Quaternion.Euler(0f, targetRotation.eulerAngles.y, 0);
-            playerTransform.rotation = Quaternion.Slerp(playerTransform.rotation, targetRotation * Quaternion.Euler(0f, 90f, 90f), playerController.RotationSpeed * Time.deltaTime);
+            playerTransform.rotation = Quaternion.Slerp(playerTransform.rotation, targetRotation, playerController.RotationSpeed * Time.deltaTime);
         }
     }
 
