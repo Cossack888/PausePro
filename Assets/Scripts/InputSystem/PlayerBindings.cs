@@ -100,7 +100,7 @@ public partial class @PlayerBindings: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ResetGame"",
+                    ""name"": ""GhostForm"",
                     ""type"": ""Button"",
                     ""id"": ""f9518991-96ae-457a-866e-fe2aa8f52961"",
                     ""expectedControlType"": ""Button"",
@@ -417,7 +417,7 @@ public partial class @PlayerBindings: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ResetGame"",
+                    ""action"": ""GhostForm"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -428,7 +428,7 @@ public partial class @PlayerBindings: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ResetGame"",
+                    ""action"": ""GhostForm"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -513,7 +513,7 @@ public partial class @PlayerBindings: IInputActionCollection2, IDisposable
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
         m_Player_Exit = m_Player.FindAction("Exit", throwIfNotFound: true);
-        m_Player_ResetGame = m_Player.FindAction("ResetGame", throwIfNotFound: true);
+        m_Player_GhostForm = m_Player.FindAction("GhostForm", throwIfNotFound: true);
         m_Player_MouseX = m_Player.FindAction("MouseX", throwIfNotFound: true);
         m_Player_MouseY = m_Player.FindAction("MouseY", throwIfNotFound: true);
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
@@ -587,7 +587,7 @@ public partial class @PlayerBindings: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Crouch;
     private readonly InputAction m_Player_Exit;
-    private readonly InputAction m_Player_ResetGame;
+    private readonly InputAction m_Player_GhostForm;
     private readonly InputAction m_Player_MouseX;
     private readonly InputAction m_Player_MouseY;
     private readonly InputAction m_Player_Shoot;
@@ -604,7 +604,7 @@ public partial class @PlayerBindings: IInputActionCollection2, IDisposable
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
         public InputAction @Exit => m_Wrapper.m_Player_Exit;
-        public InputAction @ResetGame => m_Wrapper.m_Player_ResetGame;
+        public InputAction @GhostForm => m_Wrapper.m_Player_GhostForm;
         public InputAction @MouseX => m_Wrapper.m_Player_MouseX;
         public InputAction @MouseY => m_Wrapper.m_Player_MouseY;
         public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
@@ -642,9 +642,9 @@ public partial class @PlayerBindings: IInputActionCollection2, IDisposable
             @Exit.started += instance.OnExit;
             @Exit.performed += instance.OnExit;
             @Exit.canceled += instance.OnExit;
-            @ResetGame.started += instance.OnResetGame;
-            @ResetGame.performed += instance.OnResetGame;
-            @ResetGame.canceled += instance.OnResetGame;
+            @GhostForm.started += instance.OnGhostForm;
+            @GhostForm.performed += instance.OnGhostForm;
+            @GhostForm.canceled += instance.OnGhostForm;
             @MouseX.started += instance.OnMouseX;
             @MouseX.performed += instance.OnMouseX;
             @MouseX.canceled += instance.OnMouseX;
@@ -685,9 +685,9 @@ public partial class @PlayerBindings: IInputActionCollection2, IDisposable
             @Exit.started -= instance.OnExit;
             @Exit.performed -= instance.OnExit;
             @Exit.canceled -= instance.OnExit;
-            @ResetGame.started -= instance.OnResetGame;
-            @ResetGame.performed -= instance.OnResetGame;
-            @ResetGame.canceled -= instance.OnResetGame;
+            @GhostForm.started -= instance.OnGhostForm;
+            @GhostForm.performed -= instance.OnGhostForm;
+            @GhostForm.canceled -= instance.OnGhostForm;
             @MouseX.started -= instance.OnMouseX;
             @MouseX.performed -= instance.OnMouseX;
             @MouseX.canceled -= instance.OnMouseX;
@@ -727,7 +727,7 @@ public partial class @PlayerBindings: IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnExit(InputAction.CallbackContext context);
-        void OnResetGame(InputAction.CallbackContext context);
+        void OnGhostForm(InputAction.CallbackContext context);
         void OnMouseX(InputAction.CallbackContext context);
         void OnMouseY(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);

@@ -4,7 +4,7 @@ public class Jumping : MovementType
 {
     public Jumping(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
-        action.OnParkourGlobal += Somersault;
+        //action.OnParkourGlobal += Somersault;
         action.OnJumpGlobal += WallRunOrDoubleJump;
         action.OnDashGlobal += Dash;
         controller.OnLand += Landed;
@@ -60,7 +60,10 @@ public class Jumping : MovementType
     public void Landed()
     {
         landed = true;
-        playerController.SetMovement(playerController.RegularMovement);
+        if (playerController.CurrentMovement == this)
+        {
+            playerController.SetMovement(playerController.RegularMovement);
+        }
     }
     public void WallRun()
     {
@@ -114,17 +117,17 @@ public class Jumping : MovementType
         }
     }
 
-    void Somersault()
-    {
-        if (playerController.CurrentMovement == this && !Falling())
-        {
-            playerController.SetMovement(playerController.Somersault);
-        }
-    }
+    /* void Somersault()
+     {
+         if (playerController.CurrentMovement == this && !Falling())
+         {
+             playerController.SetMovement(playerController.Somersault);
+         }
+     }*/
 
     ~Jumping()
     {
-        playerAction.OnParkourGlobal -= Somersault;
+        //playerAction.OnParkourGlobal -= Somersault;
         playerAction.OnJumpGlobal -= WallRunOrDoubleJump;
         playerAction.OnDashGlobal -= Dash;
         playerController.OnLand -= Landed;

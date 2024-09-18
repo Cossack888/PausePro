@@ -37,6 +37,9 @@ public class PlayerController : MonoBehaviour
     [Header("Crouch Settings")]
     [SerializeField] private Mesh sphere;
     [SerializeField] private Mesh capsule;
+    [Header("Ghost Settings")]
+    [SerializeField] private float ghostInteractionDistance;
+    [SerializeField] private LayerMask ghostInteractionLayer;
     [Header("Combat Settings")]
     [SerializeField] Animator leftHand;
     [SerializeField] Animator rightHand;
@@ -47,6 +50,7 @@ public class PlayerController : MonoBehaviour
     private Dash dash;
     private Crouching crouching;
     private Attacking attacking;
+    private GhostForm ghostForm;
     private float cameraPitch;
     private Transform cam;
     public float GroundDistance => groundDistance;
@@ -76,8 +80,11 @@ public class PlayerController : MonoBehaviour
     public Crouching Crouching => crouching;
     public Attacking Attacking => attacking;
     public Transform Cam => cam;
+    public GhostForm GhostForm => ghostForm;
     public Animator LeftHand => leftHand;
     public Animator RightHand => rightHand;
+    public LayerMask GhostInteractionLayer => ghostInteractionLayer;
+    public float GhostInteractionDistance => ghostInteractionDistance;
     public IMovement CurrentMovement => currentMovement;
     void Start()
     {
@@ -93,6 +100,7 @@ public class PlayerController : MonoBehaviour
         dash = new Dash(rb, transform, this, action);
         crouching = new Crouching(rb, transform, this, action);
         attacking = new Attacking(rb, transform, this, action);
+        ghostForm = new GhostForm(rb, transform, this, action);
         SetMovement(regularMovement);
     }
     private void OnCollisionEnter(Collision collision)

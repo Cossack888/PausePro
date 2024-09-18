@@ -8,6 +8,7 @@ public abstract class MovementType : IMovement
     protected PlayerAction playerAction;
     protected Momentum momentum;
     protected Vector3 movement;
+    protected bool crouched;
 
     public MovementType(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action)
     {

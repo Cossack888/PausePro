@@ -7,12 +7,10 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         action = GameObject.FindObjectOfType<PlayerAction>();
-        action.OnResetGlobal += ResetScene;
         action.OnExitGlobal += ExitGame;
     }
     private void OnDisable()
     {
-        action.OnResetGlobal -= ResetScene;
         action.OnExitGlobal -= ExitGame;
     }
 

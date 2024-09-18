@@ -1,13 +1,16 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class RegularMovement : MovementType
 {
+
     public RegularMovement(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
         action.OnJumpGlobal += Jump;
         action.OnDashGlobal += Dash;
         action.OnAttackGlobal += Attack;
+        action.OnGhostGlobal += Ghost;
     }
     public override void EnterMovement()
     {
@@ -18,9 +21,14 @@ public class RegularMovement : MovementType
         movement = new Vector3(playerAction.Movement.x, 0f, playerAction.Movement.y);
         float slowMultiplier = playerAction.IsSprinting ? 5 : 10;
         momentum.ModifyMomentum(-Time.deltaTime / slowMultiplier);
-        if (playerAction.IsCrouching && momentum.CurrentMomentum > 0)
+        if (playerAction.IsCrouching && !crouched)
         {
+            crouched = true;
             playerController.SetMovement(playerController.Crouching);
+        }
+        else if (!playerAction.IsCrouching && crouched)
+        {
+            crouched = false;
         }
     }
     public override void FixedUpdateMovement()
@@ -53,11 +61,19 @@ public class RegularMovement : MovementType
             playerController.SetMovement(playerController.Attacking);
         }
     }
+    public void Ghost()
+    {
+        if (playerController.CurrentMovement == this)
+        {
+            playerController.SetMovement(playerController.GhostForm);
+        }
+    }
 
     ~RegularMovement()
     {
         playerAction.OnJumpGlobal -= Jump;
         playerAction.OnDashGlobal -= Dash;
         playerAction.OnAttackGlobal -= Attack;
+        playerAction.OnGhostGlobal -= Ghost;
     }
 }

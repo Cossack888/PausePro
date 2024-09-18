@@ -77,7 +77,15 @@ public abstract class EnemyAI : MonoBehaviour
             isThrowing = false;
         }
     }
-
+    public void ReenableNavMeshAgent()
+    {
+        if (!agent.enabled)
+        {
+            agent.enabled = true;
+            agent.ResetPath();  // Clear the previous path
+            //agent.SetDestination(player.position);  // Set new destination to the player
+        }
+    }
     protected virtual void StartAttacking()
     {
 

@@ -9,7 +9,7 @@ public class PlayerAction : MonoBehaviour
     public event PlayerActionPerformed OnParkourGlobal;
     public event PlayerActionPerformed OnDashGlobal;
     public event PlayerActionPerformed OnExitGlobal;
-    public event PlayerActionPerformed OnResetGlobal;
+    public event PlayerActionPerformed OnGhostGlobal;
     public event PlayerActionPerformed OnShootGlobal;
     public event PlayerActionPerformed OnAttackGlobal;
     private Vector2 movementVector;
@@ -37,7 +37,7 @@ public class PlayerAction : MonoBehaviour
         bindings.Player.Crouch.performed += OnCrouch;
         bindings.Player.Crouch.canceled += OnCrouch;
         bindings.Player.Exit.performed += OnExit;
-        bindings.Player.ResetGame.performed += OnReset;
+        bindings.Player.GhostForm.performed += OnGhost;
         bindings.Player.Shoot.performed += OnShoot;
         bindings.Player.Attack.performed += OnAttack;
     }
@@ -52,7 +52,7 @@ public class PlayerAction : MonoBehaviour
         bindings.Player.Crouch.performed -= OnCrouch;
         bindings.Player.Crouch.canceled -= OnCrouch;
         bindings.Player.Exit.performed -= OnExit;
-        bindings.Player.ResetGame.performed -= OnReset;
+        bindings.Player.GhostForm.performed -= OnGhost;
         bindings.Player.Shoot.performed -= OnShoot;
         bindings.Player.Attack.performed -= OnAttack;
     }
@@ -82,9 +82,9 @@ public class PlayerAction : MonoBehaviour
             isCrouching = false;
         }
     }
-    public void OnReset(InputAction.CallbackContext context)
+    public void OnGhost(InputAction.CallbackContext context)
     {
-        if (context.performed) { OnResetGlobal?.Invoke(); }
+        if (context.performed) { OnGhostGlobal?.Invoke(); }
     }
     public void OnAttack(InputAction.CallbackContext context)
     {

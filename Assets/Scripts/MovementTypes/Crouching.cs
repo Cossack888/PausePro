@@ -27,7 +27,6 @@ public class Crouching : MovementType
         {
             originalColliderHeight = capsuleCollider.height;
             originalColliderRadius = capsuleCollider.radius;
-            originalRotation = playerTransform.rotation;
             capsuleCollider.enabled = false;
             float sphereColliderRadius = originalColliderRadius;
             if (sphereCollider != null)
@@ -40,7 +39,7 @@ public class Crouching : MovementType
                 meshFilter.mesh = sphereMesh;
             }
             originalScale = playerTransform.localScale;
-            float newScale = sphereColliderRadius * 1.5f;
+            float newScale = sphereColliderRadius * 0.5f;
             playerTransform.localScale = new Vector3(newScale, newScale, newScale);
         }
     }
@@ -49,7 +48,7 @@ public class Crouching : MovementType
     {
         movement = new Vector3(playerAction.Movement.x, 0f, playerAction.Movement.y);
         momentum.ModifyMomentum(-Time.deltaTime / 5);
-        if (!playerAction.IsCrouching || momentum.CurrentMomentum == 0)
+        if (!playerAction.IsCrouching)
         {
             playerController.SetMovement(playerController.RegularMovement);
         }
@@ -57,16 +56,17 @@ public class Crouching : MovementType
 
     public override void FixedUpdateMovement()
     {
-        Vector3 targetVelocity = ((playerController.RunSpeed + momentum.CurrentMomentum) / 2) * new Vector3(movement.x, 0, movement.z);
+        Vector3 localMovement = new Vector3(movement.x, 0, movement.z);
+        Vector3 worldMovement = playerTransform.TransformDirection(localMovement);
+        Vector3 targetVelocity = (playerController.WalkSpeed + (momentum.CurrentMomentum / 2)) * worldMovement;
         targetVelocity.y = playerRigidbody.velocity.y;
 
         playerRigidbody.velocity = targetVelocity;
-
-        RollPlayer();
     }
 
     public override void ExitMovement()
     {
+        crouched = false;
         if (sphereCollider != null)
         {
             sphereCollider.enabled = false;
@@ -82,19 +82,5 @@ public class Crouching : MovementType
             meshFilter.mesh = capsuleMesh;
         }
         playerTransform.localScale = originalScale;
-        playerTransform.rotation = originalRotation;
-    }
-
-    private float rollAngle = 0f;
-
-    private void RollPlayer()
-    {
-        if (movement.sqrMagnitude > 0.01f)
-        {
-            Vector3 movementDirection = new Vector3(movement.x, 0f, movement.z).normalized;
-            Quaternion targetRotation = Quaternion.LookRotation(movementDirection);
-            rollAngle += playerController.RollSpeed * Time.deltaTime;
-            playerTransform.rotation = targetRotation * Quaternion.Euler(rollAngle, 0, 0);
-        }
     }
 }
