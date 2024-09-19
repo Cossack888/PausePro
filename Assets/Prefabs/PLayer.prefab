@@ -293,9 +293,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d58d500733e66048ad029a59a51862c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSentitvityX: 3
-  mouseSentitvityY: 3
+  mouseSensitivityX: 0
+  mouseSensitivityY: 0
   smoothingFactor: 0.2
+  normalCam: {fileID: 0}
+  ghostCam: {fileID: 0}
   walkSpeed: 5
   runSpeed: 10
   jumpForce: 50
@@ -318,6 +320,20 @@ MonoBehaviour:
   wallDistance: 0
   sphere: {fileID: 0}
   capsule: {fileID: 0}
+  ghostInteractionDistance: 0
+  ghostInteractionLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  playerPrefab: {fileID: 0}
+  leftHand: {fileID: 0}
+  rightHand: {fileID: 0}
+  ghostLeftHand: {fileID: 0}
+  ghostRightHand: {fileID: 0}
+  sensitivitySliderX: {fileID: 0}
+  sensitivitySliderY: {fileID: 0}
+  defaultSensitivityX: 2
+  defaultSensitivityY: 2
+  smoothingEnabled: 1
 --- !u!114 &6059099729834278891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,7 +383,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6319842103605751273}
   - component: {fileID: 7640388016744276271}
-  - component: {fileID: 5170522249240959651}
   - component: {fileID: 8864068837201576242}
   - component: {fileID: 1052600138625438349}
   m_Layer: 0
@@ -447,14 +462,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &5170522249240959651
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6933850769084504002}
-  m_Enabled: 1
 --- !u!65 &8864068837201576242
 BoxCollider:
   m_ObjectHideFlags: 0

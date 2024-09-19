@@ -1,5 +1,6 @@
 using System.Diagnostics.Contracts;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -186,6 +187,15 @@ public class PlayerController : MonoBehaviour
     }
     public void SwitchCamera(Camera cam)
     {
+        foreach (Camera camera in GameObject.FindObjectsOfType<Camera>())
+        {
+            camera.GetComponent<AudioListener>().enabled = false;
+        }
+
+        if (cam.GetComponent<AudioListener>().enabled == false)
+        {
+            cam.GetComponent<AudioListener>().enabled |= true;
+        }
         this.cam = cam.transform;
     }
     public void SetMovement(IMovement newMovement)
