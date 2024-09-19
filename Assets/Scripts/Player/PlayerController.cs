@@ -113,6 +113,7 @@ public class PlayerController : MonoBehaviour
         SwitchCamera(NormalCam);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        cameraPitch = 0;
         rb = GetComponent<Rigidbody>();
         action = GetComponent<PlayerAction>();
         regularMovement = new RegularMovement(rb, transform, this, action);

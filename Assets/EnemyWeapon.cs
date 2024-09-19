@@ -11,7 +11,7 @@ public class EnemyWeapon : MonoBehaviour
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (!damageDealt)
             {
-                playerHealth.TakeDamage(20);
+                playerHealth.TakeDamage(1);
                 damageDealt = true;
                 Invoke("ResetDamageDealt", 1);
             }

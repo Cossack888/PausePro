@@ -5,11 +5,13 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private PlayerAction action;
+    private PlayerHealth health;
     public GameObject menu;
     bool menuActive;
     private void Start()
     {
         action = GameObject.FindObjectOfType<PlayerAction>();
+        health = GameObject.FindObjectOfType<PlayerHealth>();
         action.OnExitGlobal += Menu;
     }
     private void OnDisable()
@@ -19,24 +21,29 @@ public class GameManager : MonoBehaviour
 
     public void ResetScene()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     public void Menu()
     {
-        menuActive = !menuActive;
-        menu.SetActive(menuActive);
-        if (menuActive)
+        if (!health.deathScreen.activeSelf)
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            Time.timeScale = 0f;
+            menuActive = !menuActive;
+            menu.SetActive(menuActive);
+            if (menuActive)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                Time.timeScale = 0f;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                Time.timeScale = 1f;
+            }
         }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            Time.timeScale = 1f;
-        }
+
     }
     public void ExitGame()
     {
