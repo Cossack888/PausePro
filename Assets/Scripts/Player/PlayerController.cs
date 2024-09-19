@@ -1,6 +1,7 @@
 using System.Diagnostics.Contracts;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,8 +12,8 @@ public class PlayerController : MonoBehaviour
     public delegate void Landing();
     public event Landing OnLand;
     [Header("Camera Settings")]
-    [SerializeField] private float mouseSentitvityX;
-    [SerializeField] private float mouseSentitvityY;
+    [SerializeField] private float mouseSensitivityX;
+    [SerializeField] private float mouseSensitivityY;
     [SerializeField] private float smoothingFactor = 0.2f;
     [SerializeField] private Camera normalCam;
     [SerializeField] private Camera ghostCam;
@@ -49,6 +50,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Animator rightHand;
     [SerializeField] Animator ghostLeftHand;
     [SerializeField] Animator ghostRightHand;
+    [SerializeField] Slider sensitivitySliderX;
+    [SerializeField] Slider sensitivitySliderY;
+    [SerializeField] float defaultSensitivityX = 2f;
+    [SerializeField] float defaultSensitivityY = 2f;
     private RegularMovement regularMovement;
     private Jumping jumping;
     private Somersault somersault;
@@ -76,8 +81,8 @@ public class PlayerController : MonoBehaviour
     public float JumpHeight => jumpHeight;
     public float DashForce => dashForce;
     public float RollSpeed => rollSpeed;
-    public float MouseSensitivityX => mouseSentitvityX;
-    public float MouseSensitivityY => mouseSentitvityY;
+    public float MouseSensitivityX => mouseSensitivityX;
+    public float MouseSensitivityY => mouseSensitivityY;
     public Mesh Sphere => sphere;
     public Mesh Capsule => capsule;
     public Transform GroundCheck => groundCheck;
@@ -120,6 +125,7 @@ public class PlayerController : MonoBehaviour
         ghostForm = new GhostForm(rb, transform, this, action);
         ghostAttack = new GhostAttack(rb, transform, this, action);
         SetMovement(regularMovement);
+        SetMouseSensitivity();
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -127,6 +133,27 @@ public class PlayerController : MonoBehaviour
         {
             OnLand?.Invoke();
         }
+    }
+    private void SetMouseSensitivity()
+    {
+        sensitivitySliderX.minValue = 0.1f;
+        sensitivitySliderX.maxValue = 10f;
+        sensitivitySliderY.minValue = 0.1f;
+        sensitivitySliderY.maxValue = 10f;
+        sensitivitySliderX.value = defaultSensitivityX;
+        sensitivitySliderY.value = defaultSensitivityY;
+        mouseSensitivityX = defaultSensitivityX;
+        mouseSensitivityY = defaultSensitivityY;
+        sensitivitySliderX.onValueChanged.AddListener(OnSensitivityXChanged);
+        sensitivitySliderY.onValueChanged.AddListener(OnSensitivityYChanged);
+    }
+    public void OnSensitivityXChanged(float newValue)
+    {
+        mouseSensitivityX = newValue;
+    }
+    public void OnSensitivityYChanged(float newValue)
+    {
+        mouseSensitivityY = newValue;
     }
     public void CreatePlayerBody(Vector3 pos)
     {
