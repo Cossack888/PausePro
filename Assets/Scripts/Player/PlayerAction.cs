@@ -119,8 +119,7 @@ public class PlayerAction : MonoBehaviour
     }
     private void Update()
     {
-        mouseX = bindings.Player.MouseX.ReadValue<float>();
-        mouseY = bindings.Player.MouseY.ReadValue<float>();
+
         if (movementVector != Vector2.zero && bindings.Player.Sprint.ReadValue<float>() > 0)
         {
             isSprinting = true;
@@ -130,4 +129,10 @@ public class PlayerAction : MonoBehaviour
             isSprinting = false;
         }
     }
+    private void LateUpdate()
+    {
+        mouseX = bindings.Player.MouseX.ReadValue<float>();
+        mouseY = bindings.Player.MouseY.ReadValue<float>();
+    }
+
 }
