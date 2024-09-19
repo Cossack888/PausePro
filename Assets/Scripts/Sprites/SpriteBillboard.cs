@@ -13,7 +13,7 @@ public class SpriteBillboard : MonoBehaviour
     }
     private void Update()
     {
-        if (playerController != null && twoSided)
+        if (playerController != null)
         {
             Vector3 toPlayer = playerController.transform.position - transform.position;
             toPlayer.y = 0;
@@ -23,7 +23,7 @@ public class SpriteBillboard : MonoBehaviour
             {
                 transform.rotation = Quaternion.Euler(0, playerController.Cam.rotation.eulerAngles.y, 0);
             }
-            else
+            else if (twoSided)
             {
                 if (dotProduct > 0)
                 {

@@ -11,7 +11,7 @@ public class GhostForm : MovementType
     public Vector3 previousPosition;
     private GameObject playerBody;
     private List<ForceData> savedForces = new List<ForceData>();
-
+    private List<TurnOff> savedTurnOffs = new List<TurnOff>();
     public GhostForm(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
         action.OnParkourGlobal += ApplyForce;
@@ -136,12 +136,14 @@ public class GhostForm : MovementType
             TurnOff turnOff = hit.collider.GetComponent<TurnOff>();
             InteractionObject hitObject = hit.collider.gameObject.GetComponent<InteractionObject>();
 
-            if (turnOff.on == true)
+            if (turnOff != null && turnOff.on == true)
             {
                 turnOff.on = false;
+                savedTurnOffs.Add(turnOff);
+                Debug.Log(savedTurnOffs.Count);
             }
 
-            if (!hitObject.hasBeenPushed)
+            if (hitObject != null && !hitObject.hasBeenPushed)
             {
                 NavMeshAgent navMeshAgent = hit.collider.GetComponent<NavMeshAgent>();
                 EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
@@ -169,7 +171,7 @@ public class GhostForm : MovementType
             forceData.rb.AddForceAtPosition(forceData.forceDirection * 30, forceData.hitPoint, ForceMode.Impulse);
             forceData.interactionObject.Push();
         }
-        foreach (TurnOff turnOff in GameObject.FindObjectsOfType<TurnOff>())
+        foreach (TurnOff turnOff in savedTurnOffs)
         {
             if (turnOff.on == false)
             {
@@ -177,6 +179,7 @@ public class GhostForm : MovementType
             }
         }
         savedForces.Clear();
+        savedTurnOffs.Clear();
     }
 
     public void LeaveGhostForm()

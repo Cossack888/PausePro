@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
     private GhostForm ghostForm;
     private GhostAttack ghostAttack;
     private float cameraPitch;
+    bool smoothingEnabled = true;
     private Transform cam;
     public float GroundDistance => groundDistance;
     public float WallDistance => wallDistance;
@@ -135,8 +136,16 @@ public class PlayerController : MonoBehaviour
     {
         Destroy(playerBody);
     }
+    public void SmoothingOnOff()
+    {
+        smoothingEnabled = !smoothingEnabled;
+    }
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            SmoothingOnOff();
+        }
         currentMovement?.UpdateMovement();
     }
     private void FixedUpdate()
@@ -162,12 +171,19 @@ public class PlayerController : MonoBehaviour
     {
         float smoothMouseX = Mathf.Lerp(prevMouseX, action.MouseX, smoothingFactor);
         float smoothMouseY = Mathf.Lerp(prevMouseY, action.MouseY, smoothingFactor);
+
+        if (!smoothingEnabled)
+        {
+            smoothMouseX = action.MouseX;
+            smoothMouseY = action.MouseY;
+        }
         transform.Rotate(Vector3.up * smoothMouseX * MouseSensitivityX);
         cameraPitch -= smoothMouseY * MouseSensitivityY;
         cameraPitch = Mathf.Clamp(cameraPitch, -90f, 90f);
         cam.localEulerAngles = new Vector3(cameraPitch, 0f, 0f);
         prevMouseX = smoothMouseX;
         prevMouseY = smoothMouseY;
+        Debug.Log($"MouseX: {action.MouseX}, MouseY: {action.MouseY}");
     }
 
 }
