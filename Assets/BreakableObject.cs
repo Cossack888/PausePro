@@ -7,26 +7,26 @@ public class BreakableObject : MonoBehaviour
     [SerializeField] GameObject broken;
     [SerializeField] GameObject whole;
     public GameObject VFX;
+    public GameObject fire;
+    public GameObject tempFire;
     public float explosionRadius = 10f;
     public LayerMask enemyLayer;
-
+    public bool riggedToDestroy;
     private void Start()
     {
         broken.SetActive(false);
     }
-
-    private void Update()
+    public void RiggExplosion()
     {
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            FallApart();
-        }
+        riggedToDestroy = true;
+        tempFire = Instantiate(fire, transform.position, Quaternion.identity);
     }
 
     public void FallApart()
     {
         broken.SetActive(true);
         whole.SetActive(false);
+        Destroy(tempFire);
         GameObject vfx = Instantiate(VFX, transform.position, Quaternion.identity);
         Destroy(vfx, 2);
 

@@ -8,10 +8,12 @@ using UnityEngine.AI;
 public class GhostForm : MovementType
 {
     float timer;
+    float time;
     public Vector3 previousPosition;
     private GameObject playerBody;
     private List<ForceData> savedForces = new List<ForceData>();
     private List<TurnOff> savedTurnOffs = new List<TurnOff>();
+    private List<BreakableObject> explosions = new List<BreakableObject>();
     public GhostForm(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
         action.OnParkourGlobal += ApplyForce;
@@ -67,10 +69,13 @@ public class GhostForm : MovementType
     }
     public void Attack()
     {
+        playerController.GhostRightHand.SetTrigger("Slash");
+
+        /*
         if (playerController.CurrentMovement == this)
         {
             playerController.SetMovement(playerController.GhostAttack);
-        }
+        }*/
 
     }
     public override void ExitMovement()
@@ -91,6 +96,7 @@ public class GhostForm : MovementType
         }
         playerTransform.position = previousPosition;
         playerController.DestroyPlayerBody();
+        ApplySavedForces();
     }
 
     public void ApplyForce()
@@ -135,12 +141,19 @@ public class GhostForm : MovementType
         {
             TurnOff turnOff = hit.collider.GetComponent<TurnOff>();
             InteractionObject hitObject = hit.collider.gameObject.GetComponent<InteractionObject>();
+            BreakableObject breakable = hit.collider.GetComponent<BreakableObject>();
+
+            if (breakable != null)
+            {
+                breakable.RiggExplosion();
+                explosions.Add(breakable);
+            }
 
             if (turnOff != null && turnOff.on == true)
             {
-                turnOff.on = false;
+                turnOff.Turn();
                 savedTurnOffs.Add(turnOff);
-                Debug.Log(savedTurnOffs.Count);
+                Debug.Log("TurnoFF:     " + savedTurnOffs.Count);
             }
 
             if (hitObject != null && !hitObject.hasBeenPushed)
@@ -150,13 +163,18 @@ public class GhostForm : MovementType
                 Rigidbody rb = hitObject.GetComponent<Rigidbody>();
                 Vector3 forceDirection = (hit.point - start).normalized;
                 savedForces.Add(new ForceData(rb, hitObject, forceDirection, hit.point, navMeshAgent, enemy));
-                Debug.Log(savedForces.Count);
+                Debug.Log("Forces:    " + savedForces.Count);
             }
         }
     }
 
     public void ApplySavedForces()
     {
+
+        while (time < 1)
+        {
+            time += Time.deltaTime;
+        }
         foreach (ForceData forceData in savedForces)
         {
             if (forceData.navMeshAgent != null)
@@ -176,6 +194,13 @@ public class GhostForm : MovementType
             if (turnOff.on == false)
             {
                 turnOff.Unhook();
+            }
+        }
+        foreach (BreakableObject breakable in explosions)
+        {
+            if (breakable.riggedToDestroy)
+            {
+                breakable.FallApart();
             }
         }
         savedForces.Clear();

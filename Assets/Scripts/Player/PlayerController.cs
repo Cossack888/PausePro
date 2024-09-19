@@ -187,8 +187,6 @@ public class PlayerController : MonoBehaviour
 
         prevMouseX = smoothMouseX;
         prevMouseY = smoothMouseY;
-
-        Debug.Log($"Player Rotation: {transform.eulerAngles.y}, Camera Pitch: {cameraPitch}");
     }
 
 

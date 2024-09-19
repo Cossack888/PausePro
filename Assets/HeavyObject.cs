@@ -9,6 +9,7 @@ public class HeavyObject : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (rb.velocity.magnitude > 0.3f && collision.gameObject.CompareTag("Enemy"))
