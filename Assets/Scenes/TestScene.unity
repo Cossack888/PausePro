@@ -7946,6 +7946,19 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1249989908 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6933850769084504002, guid: eb2acef3b635381438df6b45868cc834, type: 3}
+  m_PrefabInstance: {fileID: 6157338057649197893}
+  m_PrefabAsset: {fileID: 0}
+--- !u!81 &1249989910
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249989908}
+  m_Enabled: 1
 --- !u!1001 &1251720638
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11780,6 +11793,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   deathText: {fileID: 1571647772}
+--- !u!114 &1710646175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710646154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cdf65c8a9441af43ab0027bb29eefb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1720556897
 GameObject:
   m_ObjectHideFlags: 0
@@ -13727,9 +13752,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2068318185}
   - component: {fileID: 2068318187}
-  - component: {fileID: 2068318186}
   - component: {fileID: 2068318189}
   - component: {fileID: 2068318188}
+  - component: {fileID: 2068318190}
   m_Layer: 9
   m_Name: Camera
   m_TagString: Untagged
@@ -13753,14 +13778,6 @@ Transform:
   - {fileID: 180611821}
   m_Father: {fileID: 605099421}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!81 &2068318186
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2068318184}
-  m_Enabled: 1
 --- !u!20 &2068318187
 Camera:
   m_ObjectHideFlags: 0
@@ -13889,6 +13906,14 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 0
+--- !u!81 &2068318190
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2068318184}
+  m_Enabled: 1
 --- !u!1 &2076903753
 GameObject:
   m_ObjectHideFlags: 0
@@ -14700,6 +14725,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5618837012980832128, guid: eb2acef3b635381438df6b45868cc834, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1710646168}
+    - targetCorrespondingSourceObject: {fileID: 5618837012980832128, guid: eb2acef3b635381438df6b45868cc834, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1710646175}
+    - targetCorrespondingSourceObject: {fileID: 6933850769084504002, guid: eb2acef3b635381438df6b45868cc834, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1249989910}
     - targetCorrespondingSourceObject: {fileID: 122677862781099003, guid: eb2acef3b635381438df6b45868cc834, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1759821110}
@@ -14802,6 +14833,22 @@ PrefabInstance:
       propertyPath: soundVolumeSlider
       value: 
       objectReference: {fileID: 26174994}
+    - target: {fileID: 4187158333746844759, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
+      propertyPath: fleshMusic.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4187158333746844759, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
+      propertyPath: fleshMusic.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: d27ca63a684897749ba43ddfd3227053, type: 3}
+    - target: {fileID: 4187158333746844759, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
+      propertyPath: fleshMusic.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 794d3e7297abe4845ad9a8e07078c78c, type: 3}
+    - target: {fileID: 4187158333746844759, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
+      propertyPath: fleshMusic.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 2de4734af03689b4b83d2a156e462a89, type: 3}
     - target: {fileID: 6810525501743744384, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
       propertyPath: m_Name
       value: AudioManager

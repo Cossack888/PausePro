@@ -170,10 +170,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            SmoothingOnOff();
-        }
+
         currentMovement?.UpdateMovement();
     }
     private void FixedUpdate()
@@ -198,6 +195,7 @@ public class PlayerController : MonoBehaviour
         }
         this.cam = cam.transform;
     }
+
     public void SetMovement(IMovement newMovement)
     {
         currentMovement?.ExitMovement();
