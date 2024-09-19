@@ -8,9 +8,11 @@ public class HeroWeapon : MonoBehaviour
     bool damageDealt;
     [SerializeField] GameObject bloodEffect;
     public MeshCollider col;
+    PlayerController playerController;
     private void Start()
     {
         col = GetComponent<MeshCollider>();
+        playerController = GetComponentInParent<PlayerController>();
     }
 
     public void DeactivateWeapon()
@@ -30,7 +32,14 @@ public class HeroWeapon : MonoBehaviour
             {
                 ContactPoint contact = collision.contacts[0];
                 Vector3 collisionPoint = contact.point;
-                collision.gameObject.GetComponent<Health>().TakeDamage(20);
+                if (playerController.CurrentMovement == playerController.GhostAttack)
+                {
+                    collision.gameObject.GetComponent<Health>().TakeDamageFromBehind(40);
+                }
+                else
+                {
+                    collision.gameObject.GetComponent<Health>().TakeDamage(20);
+                }
                 GameObject effect = Instantiate(bloodEffect, collisionPoint, Quaternion.identity, collision.transform);
                 Destroy(effect, 1);
                 damageDealt = true;

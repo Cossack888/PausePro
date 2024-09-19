@@ -8,19 +8,25 @@ using UnityEngine.AI;
 public class GhostForm : MovementType
 {
     float timer;
+    public Vector3 previousPosition;
+    private GameObject playerBody;
     private List<ForceData> savedForces = new List<ForceData>();
 
     public GhostForm(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
         action.OnParkourGlobal += ApplyForce;
         action.OnGhostGlobal += LeaveGhostForm;
+        action.OnAttackGlobal += Attack;
     }
 
     public override void EnterMovement()
     {
+        previousPosition = playerTransform.position;
+        playerController.CreatePlayerBody(previousPosition);
         timer = 0;
         playerRigidbody.useGravity = false;
         playerController.GhostCam.gameObject.SetActive(true);
+        playerController.NormalCam.gameObject.SetActive(false);
         playerController.SwitchCamera(playerController.GhostCam);
         foreach (Animator anim in GameObject.FindObjectsOfType<Animator>())
         {
@@ -59,7 +65,14 @@ public class GhostForm : MovementType
             ApplySavedForces();
         }
     }
+    public void Attack()
+    {
+        if (playerController.CurrentMovement == this)
+        {
+            playerController.SetMovement(playerController.GhostAttack);
+        }
 
+    }
     public override void ExitMovement()
     {
         playerRigidbody.useGravity = true;
@@ -68,18 +81,22 @@ public class GhostForm : MovementType
             if (anim.gameObject.GetComponent<EnemyAI>() != null)
             {
                 anim.SetBool("Stopped", false);
+                anim.SetBool("Back", false);
             }
         }
         foreach (EnemyAI enemy in GameObject.FindObjectsOfType<EnemyAI>())
         {
-            enemy.isStationary = false;
+            enemy.UnpauseEnemy();
+            //enemy.ReenableNavMeshAgent();
         }
+        playerTransform.position = previousPosition;
+        playerController.DestroyPlayerBody();
     }
 
     public void ApplyForce()
     {
         Vector3 start = playerTransform.position;
-        Vector3 direction = Camera.main.transform.forward;
+        Vector3 direction = playerController.Cam.transform.forward;
         Debug.DrawRay(start, direction * playerController.GhostInteractionDistance, Color.red);
 
         if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
@@ -116,7 +133,14 @@ public class GhostForm : MovementType
 
         if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
         {
+            TurnOff turnOff = hit.collider.GetComponent<TurnOff>();
             InteractionObject hitObject = hit.collider.gameObject.GetComponent<InteractionObject>();
+
+            if (turnOff.on == true)
+            {
+                turnOff.on = false;
+            }
+
             if (!hitObject.hasBeenPushed)
             {
                 NavMeshAgent navMeshAgent = hit.collider.GetComponent<NavMeshAgent>();
@@ -142,8 +166,15 @@ public class GhostForm : MovementType
                 forceData.enemy.enabled = false;
             }
             forceData.rb.isKinematic = false;
-            forceData.rb.AddForceAtPosition(forceData.forceDirection * 10, forceData.hitPoint, ForceMode.Impulse);
+            forceData.rb.AddForceAtPosition(forceData.forceDirection * 30, forceData.hitPoint, ForceMode.Impulse);
             forceData.interactionObject.Push();
+        }
+        foreach (TurnOff turnOff in GameObject.FindObjectsOfType<TurnOff>())
+        {
+            if (turnOff.on == false)
+            {
+                turnOff.Unhook();
+            }
         }
         savedForces.Clear();
     }
@@ -154,6 +185,7 @@ public class GhostForm : MovementType
         {
             playerController.SetMovement(playerController.RegularMovement);
             playerController.GhostCam.gameObject.SetActive(false);
+            playerController.NormalCam.gameObject.SetActive(true);
             playerController.SwitchCamera(playerController.NormalCam);
         }
     }
@@ -162,5 +194,6 @@ public class GhostForm : MovementType
     {
         playerAction.OnParkourGlobal -= ApplyForce;
         playerAction.OnGhostGlobal -= LeaveGhostForm;
+        playerAction.OnAttackGlobal -= Attack;
     }
 }

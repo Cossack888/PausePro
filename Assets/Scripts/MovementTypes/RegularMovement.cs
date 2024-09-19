@@ -42,7 +42,7 @@ public class RegularMovement : MovementType
 
     public void Jump()
     {
-        if (IsGrounded())
+        if (IsGrounded() && playerController.CurrentMovement == this)
         {
             playerController.SetMovement(playerController.Jumping);
         }

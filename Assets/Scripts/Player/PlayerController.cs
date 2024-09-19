@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     private IMovement currentMovement;
     private Rigidbody rb;
     private PlayerAction action;
+    private GameObject playerBody;
     public delegate void Landing();
     public event Landing OnLand;
     [Header("Camera Settings")]
@@ -42,17 +43,22 @@ public class PlayerController : MonoBehaviour
     [Header("Ghost Settings")]
     [SerializeField] private float ghostInteractionDistance;
     [SerializeField] private LayerMask ghostInteractionLayer;
+    [SerializeField] GameObject playerPrefab;
     [Header("Combat Settings")]
     [SerializeField] Animator leftHand;
     [SerializeField] Animator rightHand;
+    [SerializeField] Animator ghostLeftHand;
+    [SerializeField] Animator ghostRightHand;
     private RegularMovement regularMovement;
     private Jumping jumping;
     private Somersault somersault;
     private WallRun wallRun;
     private Dash dash;
     private Crouching crouching;
+    private CrouchJump crouchJump;
     private Attacking attacking;
     private GhostForm ghostForm;
+    private GhostAttack ghostAttack;
     private float cameraPitch;
     private Transform cam;
     public float GroundDistance => groundDistance;
@@ -80,15 +86,20 @@ public class PlayerController : MonoBehaviour
     public WallRun WallRun => wallRun;
     public Dash Dash => dash;
     public Crouching Crouching => crouching;
+    public CrouchJump CrouchJump => crouchJump;
     public Attacking Attacking => attacking;
+    public GhostAttack GhostAttack => ghostAttack;
     public Transform Cam => cam;
     public Camera NormalCam => normalCam;
     public Camera GhostCam => ghostCam;
     public GhostForm GhostForm => ghostForm;
     public Animator LeftHand => leftHand;
     public Animator RightHand => rightHand;
+    public Animator GhostRightHand => ghostRightHand;
+    public Animator GhostLeftHand => ghostLeftHand;
     public LayerMask GhostInteractionLayer => ghostInteractionLayer;
     public float GhostInteractionDistance => ghostInteractionDistance;
+    public GameObject PlayerPrefab => playerPrefab;
     public IMovement CurrentMovement => currentMovement;
     void Start()
     {
@@ -103,8 +114,10 @@ public class PlayerController : MonoBehaviour
         wallRun = new WallRun(rb, transform, this, action);
         dash = new Dash(rb, transform, this, action);
         crouching = new Crouching(rb, transform, this, action);
+        crouchJump = new CrouchJump(rb, transform, this, action);
         attacking = new Attacking(rb, transform, this, action);
         ghostForm = new GhostForm(rb, transform, this, action);
+        ghostAttack = new GhostAttack(rb, transform, this, action);
         SetMovement(regularMovement);
     }
     private void OnCollisionEnter(Collision collision)
@@ -113,6 +126,14 @@ public class PlayerController : MonoBehaviour
         {
             OnLand?.Invoke();
         }
+    }
+    public void CreatePlayerBody(Vector3 pos)
+    {
+        playerBody = Instantiate(playerPrefab, pos, Quaternion.identity);
+    }
+    public void DestroyPlayerBody()
+    {
+        Destroy(playerBody);
     }
     void Update()
     {

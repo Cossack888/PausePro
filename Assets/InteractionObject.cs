@@ -38,15 +38,19 @@ public class InteractionObject : MonoBehaviour
     {
         hasBeenPushed = false;
         inMotion = false;
-        if (agent != null)
+        if (gameObject.GetComponent<EnemyAI>() != null)
         {
-            agent.enabled = true;
+            if (agent != null)
+            {
+                agent.enabled = true;
+            }
+            if (enemyAI != null)
+            {
+                enemyAI.enabled = true;
+                enemyAI.ReenableNavMeshAgent();
+            }
+            rb.isKinematic = true;
         }
-        if (enemyAI != null)
-        {
-            enemyAI.enabled = true;
-            enemyAI.ReenableNavMeshAgent();
-        }
-        rb.isKinematic = true;
+
     }
 }

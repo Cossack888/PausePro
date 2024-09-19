@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeEnemy : EnemyAI
+public class FlyingEnemy : EnemyAI
 {
-
     protected override IEnumerator Attack()
     {
         isAttacking = true;
@@ -50,7 +49,6 @@ public class MeleeEnemy : EnemyAI
 
     protected override void HandleMovement()
     {
-        if (isStationary) return;
         agent.destination = player.position;
     }
 

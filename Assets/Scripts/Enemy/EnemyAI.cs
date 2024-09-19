@@ -47,6 +47,7 @@ public abstract class EnemyAI : MonoBehaviour
         if (isStationary)
         {
             agent.isStopped = true;
+            col.enabled = false;
             return;
         }
 
@@ -69,7 +70,12 @@ public abstract class EnemyAI : MonoBehaviour
 
     }
 
-
+    public void UnpauseEnemy()
+    {
+        isStationary = false;
+        agent.isStopped = false;
+        HandleMovement();
+    }
 
     protected abstract void Block();
     protected abstract void HandleMovement();

@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class BreakableObject : MonoBehaviour
 {
     [SerializeField] GameObject broken;
     [SerializeField] GameObject whole;
     public GameObject VFX;
+    public float explosionRadius = 10f;
+    public LayerMask enemyLayer;
+
     private void Start()
     {
         broken.SetActive(false);
     }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.O))
@@ -19,6 +22,7 @@ public class BreakableObject : MonoBehaviour
             FallApart();
         }
     }
+
     public void FallApart()
     {
         broken.SetActive(true);
@@ -41,6 +45,27 @@ public class BreakableObject : MonoBehaviour
                 rb.AddTorque(randomTorque, ForceMode.Impulse);
             }
         }
+
+        DetectEnemies();
     }
 
+    private void DetectEnemies()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius, enemyLayer);
+
+        foreach (Collider hit in hitColliders)
+        {
+            if (hit.CompareTag("Enemy"))
+            {
+                hit.GetComponent<Health>().TakeDamage(200);
+            }
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // Visualize the explosion radius in the scene view
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, explosionRadius);
+    }
 }

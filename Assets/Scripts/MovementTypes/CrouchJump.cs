@@ -1,36 +1,64 @@
 using UnityEngine;
 
-public class Jumping : MovementType
+public class CrouchJump : MovementType
 {
-    public Jumping(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
-    {
-        //action.OnParkourGlobal += Somersault;
-        action.OnJumpGlobal += WallRunOrDoubleJump;
-        action.OnDashGlobal += Dash;
-        controller.OnLand += Landed;
-    }
+    private Vector3 originalScale;
+    private CapsuleCollider capsuleCollider;
+    private SphereCollider sphereCollider;
+    private MeshFilter meshFilter;
+    private Mesh capsuleMesh;
+    private Mesh sphereMesh;
+    private float originalColliderHeight;
+    private float originalColliderRadius;
     private float initialYPosition;
     private float targetYPosition;
     private float currentYVelocity;
     private bool isAscending;
     private bool isAtPeak;
-    private bool doubleJumped;
     private bool landed;
+    public CrouchJump(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
+    {
+        action.OnDashGlobal += Dash;
+        controller.OnLand += Landed;
+        capsuleCollider = controller.GetComponent<CapsuleCollider>();
+        sphereCollider = controller.GetComponent<SphereCollider>();
+        meshFilter = controller.GetComponent<MeshFilter>();
+        capsuleMesh = playerController.Capsule;
+        sphereMesh = playerController.Sphere;
+    }
+
     public override void EnterMovement()
     {
+        if (capsuleCollider != null)
+        {
+            originalColliderHeight = capsuleCollider.height;
+            originalColliderRadius = capsuleCollider.radius;
+            capsuleCollider.enabled = false;
+            float sphereColliderRadius = originalColliderRadius;
+            if (sphereCollider != null)
+            {
+                sphereCollider.radius = sphereColliderRadius;
+                sphereCollider.enabled = true;
+            }
+            if (meshFilter != null)
+            {
+                meshFilter.mesh = sphereMesh;
+            }
+            originalScale = playerTransform.localScale;
+            float newScale = sphereColliderRadius * 0.5f;
+            playerTransform.localScale = new Vector3(newScale, newScale, newScale);
+        }
         initialYPosition = playerRigidbody.position.y;
         targetYPosition = initialYPosition + playerController.JumpHeight;
         currentYVelocity = 0f;
         isAscending = true;
         isAtPeak = false;
         landed = true;
-        momentum.ModifyMomentum(-0.1f);
     }
     public override void UpdateMovement()
     {
         if (IsGrounded() && Falling() && !landed)
         {
-            doubleJumped = false;
             Landed();
         }
 
@@ -42,33 +70,34 @@ public class Jumping : MovementType
         }
 
     }
-
-    public void WallRunOrDoubleJump()
+    public override void ExitMovement()
     {
-        if (!IsGrounded() && playerController.CurrentMovement == this)
+        crouched = false;
+        if (sphereCollider != null)
         {
-            if (StuckToLeftSide() || StuckToRightSide())
-            {
-                WallRun();
-            }
-            else
-            {
-                DoubleJump();
-            }
+            sphereCollider.enabled = false;
         }
+        if (capsuleCollider != null)
+        {
+            capsuleCollider.height = originalColliderHeight;
+            capsuleCollider.radius = originalColliderRadius;
+            capsuleCollider.enabled = true;
+        }
+        if (meshFilter != null)
+        {
+            meshFilter.mesh = capsuleMesh;
+        }
+        playerTransform.localScale = originalScale;
     }
     public void Landed()
     {
         landed = true;
         if (playerController.CurrentMovement == this)
         {
-            playerController.SetMovement(playerController.RegularMovement);
+            playerController.SetMovement(playerController.Crouching);
         }
     }
-    public void WallRun()
-    {
-        playerController.SetMovement(playerController.WallRun);
-    }
+
     public void Dash()
     {
         if (playerController.CurrentMovement == this)
@@ -108,27 +137,10 @@ public class Jumping : MovementType
         targetVelocity.y = currentYVelocity;
         playerRigidbody.velocity = targetVelocity;
     }
-    void DoubleJump()
-    {
-        if (!doubleJumped)
-        {
-            doubleJumped = true;
-            playerController.SetMovement(this);
-        }
-    }
 
-    /* void Somersault()
-     {
-         if (playerController.CurrentMovement == this && !Falling())
-         {
-             playerController.SetMovement(playerController.Somersault);
-         }
-     }*/
-
-    ~Jumping()
+    ~CrouchJump()
     {
-        //playerAction.OnParkourGlobal -= Somersault;
-        playerAction.OnJumpGlobal -= WallRunOrDoubleJump;
+
         playerAction.OnDashGlobal -= Dash;
         playerController.OnLand -= Landed;
     }

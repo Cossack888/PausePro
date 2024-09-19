@@ -3,7 +3,6 @@ using UnityEngine;
 public class Crouching : MovementType
 {
     private Vector3 originalScale;
-    private Quaternion originalRotation;
     private CapsuleCollider capsuleCollider;
     private SphereCollider sphereCollider;
     private MeshFilter meshFilter;
@@ -19,6 +18,7 @@ public class Crouching : MovementType
         meshFilter = controller.GetComponent<MeshFilter>();
         capsuleMesh = playerController.Capsule;
         sphereMesh = playerController.Sphere;
+        action.OnJumpGlobal += CrouchJump;
     }
 
     public override void EnterMovement()
@@ -54,6 +54,13 @@ public class Crouching : MovementType
         }
     }
 
+    public void CrouchJump()
+    {
+        if (playerController.CurrentMovement == this)
+        {
+            playerController.SetMovement(playerController.CrouchJump);
+        }
+    }
     public override void FixedUpdateMovement()
     {
         Vector3 localMovement = new Vector3(movement.x, 0, movement.z);
@@ -82,5 +89,10 @@ public class Crouching : MovementType
             meshFilter.mesh = capsuleMesh;
         }
         playerTransform.localScale = originalScale;
+    }
+
+    ~Crouching()
+    {
+        playerAction.OnJumpGlobal -= CrouchJump;
     }
 }
