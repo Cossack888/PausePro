@@ -19,6 +19,7 @@ public class GhostForm : MovementType
         action.OnParkourGlobal += ApplyForce;
         action.OnGhostGlobal += LeaveGhostForm;
         action.OnAttackGlobal += Attack;
+
     }
 
     public override void EnterMovement()
@@ -30,6 +31,7 @@ public class GhostForm : MovementType
         playerController.GhostCam.gameObject.SetActive(true);
         playerController.NormalCam.gameObject.SetActive(false);
         playerController.SwitchCamera(playerController.GhostCam);
+        AudioManager.instance.SwitchToAlbum("ghost");
         foreach (Animator anim in GameObject.FindObjectsOfType<Animator>())
         {
             if (anim.gameObject.GetComponent<EnemyAI>() != null)
@@ -97,6 +99,7 @@ public class GhostForm : MovementType
         playerTransform.position = previousPosition;
         playerController.DestroyPlayerBody();
         ApplySavedForces();
+        AudioManager.instance.SwitchToAlbum("flesh");
     }
 
     public void ApplyForce()
