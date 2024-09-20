@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,7 +8,9 @@ public class GameManager : MonoBehaviour
     private PlayerAction action;
     private PlayerHealth health;
     public GameObject menu;
+    public TMP_Text bottlesText;
     bool menuActive;
+    int bottles;
     private void Start()
     {
         action = GameObject.FindObjectOfType<PlayerAction>();
@@ -18,7 +21,15 @@ public class GameManager : MonoBehaviour
     {
         action.OnExitGlobal -= Menu;
     }
-
+    public void ChangeAmountOfBottles(int amount)
+    {
+        bottles += amount;
+        bottlesText.text = bottles.ToString();
+    }
+    public int GetBottles()
+    {
+        return bottles;
+    }
     public void ResetScene()
     {
         Time.timeScale = 1f;

@@ -12,9 +12,8 @@ public class GhostForm : MovementType
     float timer;
     float time;
     private float timeElapsed;
-    private float highlightTimer;
-    private bool highlightTimerOn;
     private bool dashTimer;
+    private float cooldown;
     public Vector3 previousPosition;
     private GameObject playerBody;
     private List<ForceData> savedForces = new List<ForceData>();
@@ -22,15 +21,19 @@ public class GhostForm : MovementType
     private List<BreakableObject> explosions = new List<BreakableObject>();
     private List<GameObject> redObjects = new List<GameObject>();
     private GameObject highlightedObject;
+    private GameManager gameManager;
     public GhostForm(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
         action.OnParkourGlobal += InitializeDash;
         action.OnGhostGlobal += LeaveGhostForm;
         action.OnAttackGlobal += Attack;
+        gameManager = GameObject.FindObjectOfType<GameManager>();
     }
 
     public override void EnterMovement()
     {
+        cooldown = gameManager.GetBottles();
+        gameManager.ChangeAmountOfBottles(-gameManager.GetBottles());
         previousPosition = playerTransform.position;
         playerController.CreatePlayerBody(previousPosition);
         timer = 0;
@@ -68,6 +71,11 @@ public class GhostForm : MovementType
         timer += Time.deltaTime;
         movement = new Vector3(playerAction.Movement.x, 0f, playerAction.Movement.y);
         timeElapsed += Time.deltaTime;
+        cooldown -= Time.deltaTime;
+        if (cooldown <= 0)
+        {
+            LeaveGhostForm();
+        }
         FindObjectInFocus();
         if (dashTimer == true)
         {
@@ -77,17 +85,7 @@ public class GhostForm : MovementType
                 dashTimer = false;
             }
         }
-        if (highlightTimerOn == true)
-        {
-            highlightTimer += Time.deltaTime;
-            if (highlightTimer > 0.5f && highlightedObject != null)
-            {
-                TurnColor(Color.white, highlightedObject);
-                highlightTimer = 0;
-                highlightTimerOn = false;
-                highlightedObject = null;
-            }
-        }
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             SaveForce();
