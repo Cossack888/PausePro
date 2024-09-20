@@ -20,6 +20,7 @@ public class GhostForm : MovementType
     private List<TurnOff> savedTurnOffs = new List<TurnOff>();
     private List<BreakableObject> explosions = new List<BreakableObject>();
     private List<GameObject> redObjects = new List<GameObject>();
+    private List<GameObject> greenObjects = new List<GameObject>();
     private GameObject highlightedObject;
     private GameManager gameManager;
     public GhostForm(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
@@ -133,6 +134,11 @@ public class GhostForm : MovementType
         {
             enemy.UnpauseEnemy();
             //enemy.ReenableNavMeshAgent();
+        }
+        redObjects.Clear();
+        foreach (GameObject objects in greenObjects)
+        {
+            TurnColor(Color.white, objects);
         }
         playerTransform.position = previousPosition;
         playerController.DestroyPlayerBody();
@@ -295,6 +301,7 @@ public class GhostForm : MovementType
 
         foreach (Collider hit in hitColliders)
         {
+            greenObjects.Add(hit.gameObject);
             Debug.Log("Hit " + hit.transform.name);
             if (ObjectProneToInteraction(hit.gameObject))
                 TurnColor(Color.green, hit.gameObject);
