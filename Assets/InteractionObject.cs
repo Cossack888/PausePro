@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class InteractionObject : MonoBehaviour
 {
@@ -27,6 +28,15 @@ public class InteractionObject : MonoBehaviour
     public void Push()
     {
         hasBeenPushed = true;
+        if (GetComponentInChildren<MeshRenderer>() != null)
+        {
+            GetComponentInChildren<MeshRenderer>().material.color = Color.white;
+        }
+        if (GetComponentInChildren<SpriteRenderer>() != null)
+        {
+            GetComponentInChildren<SpriteRenderer>().color = Color.white;
+        }
+
         Invoke("CheckForMotion", 0.5f);
         Invoke("ResetBeingPushed", 5);
     }

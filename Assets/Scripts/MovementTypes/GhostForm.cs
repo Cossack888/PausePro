@@ -4,11 +4,15 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.UI;
 
 public class GhostForm : MovementType
 {
     float timer;
     float time;
+    private float timeElapsed;
+    private bool dashTimer;
     public Vector3 previousPosition;
     private GameObject playerBody;
     private List<ForceData> savedForces = new List<ForceData>();
@@ -16,10 +20,9 @@ public class GhostForm : MovementType
     private List<BreakableObject> explosions = new List<BreakableObject>();
     public GhostForm(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
-        action.OnParkourGlobal += ApplyForce;
+        action.OnParkourGlobal += InitializeDash;
         action.OnGhostGlobal += LeaveGhostForm;
         action.OnAttackGlobal += Attack;
-
     }
 
     public override void EnterMovement()
@@ -59,6 +62,16 @@ public class GhostForm : MovementType
     {
         timer += Time.deltaTime;
         movement = new Vector3(playerAction.Movement.x, 0f, playerAction.Movement.y);
+        timeElapsed += Time.deltaTime;
+        if (dashTimer == true)
+        {
+            if (timeElapsed > 0.5)
+            {
+                playerRigidbody.velocity = Vector3.zero;
+                dashTimer = false;
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             SaveForce();
@@ -68,17 +81,31 @@ public class GhostForm : MovementType
         {
             ApplySavedForces();
         }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            HighlightStuff();
+        }
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            TransportObjectToPlayer();
+        }
+
+    }
+
+    private void InitializeDash()
+    {
+        if (playerController.CurrentMovement == this)
+        {
+            dashTimer = true;
+            timeElapsed = 0;
+            playerRigidbody.AddForce(playerController.Cam.forward * playerController.DashForce * (1 + momentum.CurrentMomentum / 5));
+            momentum.ModifyMomentum(-0.1f);
+        }
+
     }
     public void Attack()
     {
         playerController.GhostRightHand.SetTrigger("Slash");
-
-        /*
-        if (playerController.CurrentMovement == this)
-        {
-            playerController.SetMovement(playerController.GhostAttack);
-        }*/
-
     }
     public override void ExitMovement()
     {
@@ -112,7 +139,7 @@ public class GhostForm : MovementType
         {
             Debug.DrawLine(start, hit.point, Color.green);
             InteractionObject hitObject = hit.collider.gameObject.GetComponent<InteractionObject>();
-            if (!hitObject.hasBeenPushed)
+            if (hitObject != null && !hitObject.hasBeenPushed)
             {
                 NavMeshAgent navMeshAgent = hit.collider.GetComponent<NavMeshAgent>();
                 EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
@@ -145,7 +172,9 @@ public class GhostForm : MovementType
             TurnOff turnOff = hit.collider.GetComponent<TurnOff>();
             InteractionObject hitObject = hit.collider.gameObject.GetComponent<InteractionObject>();
             BreakableObject breakable = hit.collider.GetComponent<BreakableObject>();
+            GameObject hitData = hit.collider.gameObject;
 
+            TurnColor(Color.red, hitData);
             if (breakable != null)
             {
                 breakable.RiggExplosion();
@@ -161,6 +190,7 @@ public class GhostForm : MovementType
 
             if (hitObject != null && !hitObject.hasBeenPushed)
             {
+
                 NavMeshAgent navMeshAgent = hit.collider.GetComponent<NavMeshAgent>();
                 EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
                 Rigidbody rb = hitObject.GetComponent<Rigidbody>();
@@ -209,7 +239,50 @@ public class GhostForm : MovementType
         savedForces.Clear();
         savedTurnOffs.Clear();
     }
+    public void TransportObjectToPlayer()
+    {
+        LayerMask mask = Physics.AllLayers;
+        if (Physics.Raycast(playerTransform.position, playerTransform.forward, out RaycastHit hit, Mathf.Infinity, mask))
+        {
+            GameObject hitObject = hit.collider.gameObject;
+            if (ObjectProneToInteraction(hitObject))
+            {
+                hitObject.transform.position = playerTransform.position + playerTransform.forward;
+                TurnColor(Color.white, hitObject);
+            }
+        }
+    }
+    void HighlightStuff()
+    {
+        Debug.Log("Running the HighlightStuff action");
+        float sphereRadius = 10000.0f;
+        LayerMask targetMask = Physics.AllLayers;
+        Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, sphereRadius, targetMask);
 
+        foreach (Collider hit in hitColliders)
+        {
+            Debug.Log("Hit " + hit.transform.name);
+            if (ObjectProneToInteraction(hit.gameObject))
+                TurnColor(Color.green, hit.gameObject);
+        }
+    }
+    public bool ObjectProneToInteraction(GameObject gameObject)
+    {
+        if (gameObject.GetComponent<BreakableObject>() != null || gameObject.GetComponent<InteractionObject>() != null || gameObject.GetComponent<TurnOff>() != null)
+            return true;
+        else return false;
+    }
+    public void TurnColor(Color color, GameObject hitData)
+    {
+        if (hitData.GetComponentInChildren<MeshRenderer>() != null)
+        {
+            hitData.GetComponentInChildren<MeshRenderer>().material.color = color;
+        }
+        if (hitData.GetComponentInChildren<SpriteRenderer>() != null)
+        {
+            hitData.GetComponentInChildren<SpriteRenderer>().color = color;
+        }
+    }
     public void LeaveGhostForm()
     {
         if (playerController.CurrentMovement == this && timer > 1)
@@ -223,7 +296,7 @@ public class GhostForm : MovementType
 
     ~GhostForm()
     {
-        playerAction.OnParkourGlobal -= ApplyForce;
+        playerAction.OnParkourGlobal -= InitializeDash;
         playerAction.OnGhostGlobal -= LeaveGhostForm;
         playerAction.OnAttackGlobal -= Attack;
     }

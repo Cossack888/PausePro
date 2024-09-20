@@ -20,6 +20,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Camera ghostCam;
     private float prevMouseX;
     private float prevMouseY;
+    private bool cameraLocked = true;
+    private float unlockTime = 1f;
+    private float timer = 0f;
     [Header("Player Settings")]
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
@@ -113,7 +116,9 @@ public class PlayerController : MonoBehaviour
         SwitchCamera(NormalCam);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        cameraPitch = 0;
+        cameraLocked = true;
+        cameraPitch = 0f;
+        cam.localEulerAngles = new Vector3(cameraPitch, 0f, 0f);
         rb = GetComponent<Rigidbody>();
         action = GetComponent<PlayerAction>();
         regularMovement = new RegularMovement(rb, transform, this, action);
@@ -171,12 +176,42 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (ghostLeftHand.isActiveAndEnabled)
+            {
+                ghostLeftHand.SetTrigger("spell");
+            }
+            else if (leftHand.isActiveAndEnabled)
+            {
+                leftHand.SetTrigger("spell");
+            }
+        }
+        if (Input.GetMouseButtonDown(2))
+        {
+            if (ghostLeftHand.isActiveAndEnabled)
+            {
+                ghostLeftHand.SetTrigger("push");
+            }
+            else if (leftHand.isActiveAndEnabled)
+            {
+                leftHand.SetTrigger("push");
+            }
+        }
         currentMovement?.UpdateMovement();
     }
     private void FixedUpdate()
     {
         currentMovement?.FixedUpdateMovement();
+        if (cameraLocked)
+        {
+            timer += Time.deltaTime;
+            if (timer >= unlockTime)
+            {
+                cameraLocked = false;
+            }
+            return;
+        }
         UpdateCamera();
     }
     private void LateUpdate()

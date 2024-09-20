@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TurnOff : MonoBehaviour
 {
@@ -14,12 +15,18 @@ public class TurnOff : MonoBehaviour
     public void Turn()
     {
         on = false;
-        GetComponent<MeshRenderer>().material.color = Color.red;
     }
 
     public void Unhook()
     {
-        GetComponent<MeshRenderer>().material.color = Color.white;
+        if (GetComponentInChildren<MeshRenderer>() != null)
+        {
+            GetComponentInChildren<MeshRenderer>().material.color = Color.white;
+        }
+        if (GetComponentInChildren<SpriteRenderer>() != null)
+        {
+            GetComponentInChildren<SpriteRenderer>().color = Color.white;
+        }
         Rigidbody rb = joint.connectedBody;
         joint.connectedBody = null;
         rb.AddForce(Vector3.down * 0.1f, ForceMode.Impulse);
