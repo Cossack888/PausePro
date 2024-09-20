@@ -138,7 +138,11 @@ public class GhostForm : MovementType
         redObjects.Clear();
         foreach (GameObject objects in greenObjects)
         {
-            TurnColor(Color.white, objects);
+            if (objects != null)
+            {
+                TurnColor(Color.white, objects);
+            }
+
         }
         playerTransform.position = previousPosition;
         playerController.DestroyPlayerBody();
