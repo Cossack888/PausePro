@@ -424,7 +424,6 @@ GameObject:
   - component: {fileID: 4053287050239771613}
   - component: {fileID: 5282100564057109331}
   - component: {fileID: 1522855699066460450}
-  - component: {fileID: 4336981987011603421}
   m_Layer: 0
   m_Name: ProperPlayer
   m_TagString: Player
@@ -658,18 +657,6 @@ MonoBehaviour:
   heartFull: {fileID: 21300000, guid: 576d6a94c960cc649b571e219c81e655, type: 3}
   heartEmpty: {fileID: 21300000, guid: 1d3a5b7434b350d41a1b5c7094fb336d, type: 3}
   deathScreen: {fileID: 0}
---- !u!114 &4336981987011603421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4210539056456741578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cdf65c8a9441af43ab0027bb29eefb0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5640226145584503234
 GameObject:
   m_ObjectHideFlags: 0

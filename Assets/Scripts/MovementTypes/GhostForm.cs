@@ -32,7 +32,7 @@ public class GhostForm : MovementType
 
     public override void EnterMovement()
     {
-        cooldown = gameManager.GetBottles();
+        cooldown = gameManager.GetBottles() * 10;
         gameManager.ChangeAmountOfBottles(-gameManager.GetBottles());
         previousPosition = playerTransform.position;
         playerController.CreatePlayerBody(previousPosition);
