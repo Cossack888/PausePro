@@ -22,7 +22,8 @@ public class GhostForm : MovementType
     {
         action.OnParkourGlobal += InitializeDash;
         action.OnGhostGlobal += LeaveGhostForm;
-        action.OnAttackGlobal += Attack;
+        action.OnAttackGlobal += Teleport;
+        action.OnShootGlobal += Interact;
     }
 
     public override void EnterMovement()
@@ -72,6 +73,9 @@ public class GhostForm : MovementType
             }
         }
 
+
+        HighlightStuff();
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             SaveForce();
@@ -81,10 +85,11 @@ public class GhostForm : MovementType
         {
             ApplySavedForces();
         }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            HighlightStuff();
-        }
+        // /if (Input.GetKeyDown(KeyCode.T))
+        // {
+        //     Debug.Log("Highlight stuff");
+        //     HighlightStuff();
+        // }
         if (Input.GetKeyDown(KeyCode.Y))
         {
             TransportObjectToPlayer();
@@ -103,10 +108,38 @@ public class GhostForm : MovementType
         }
 
     }
-    public void Attack()
+    public void Teleport()
     {
-        playerController.GhostRightHand.SetTrigger("Slash");
+        //playerController.GhostRightHand.SetTrigger("Slash");
+        GameObject objectInFocus = FindObjectInFocus();
+
+        //FIXME: what this does should depend on the type of the object
+        //maybe have the specific actions defined in the object we interact with?
+        if (ObjectProneToInteraction(objectInFocus))
+        {
+            objectInFocus.transform.position = playerTransform.position + playerTransform.forward;
+        }
     }
+    public void Interact()
+    {
+        //playerController.GhostRightHand.SetTrigger("Slash");
+        GameObject objectInFocus = FindObjectInFocus();
+
+        if (objectInFocus == null)
+        {
+            return;
+        }
+
+        BreakableObject breakable = objectInFocus.GetComponent<BreakableObject>();
+
+        if (breakable != null)
+        {
+            TurnColor(Color.red, objectInFocus);
+            breakable.RiggExplosion();
+            explosions.Add(breakable);
+        }
+    }
+
     public override void ExitMovement()
     {
         playerRigidbody.useGravity = true;
@@ -252,6 +285,7 @@ public class GhostForm : MovementType
             }
         }
     }
+
     void HighlightStuff()
     {
         Debug.Log("Running the HighlightStuff action");
@@ -265,7 +299,39 @@ public class GhostForm : MovementType
             if (ObjectProneToInteraction(hit.gameObject))
                 TurnColor(Color.green, hit.gameObject);
         }
+
+        GameObject objectInFocus = FindObjectInFocus();
+        if (objectInFocus != null)
+        {
+            Debug.Log("Found objectInFocus:" + objectInFocus.name);
+            TurnColor(Color.blue, objectInFocus);
+        }
     }
+
+    GameObject FindObjectInFocus()
+    {
+        float sphereRadius = 10000.0f;
+        LayerMask targetMask = Physics.AllLayers;
+        Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, sphereRadius, targetMask);
+
+        GameObject nearestObject = null;
+        float lowestAngle = Mathf.Infinity;
+
+        foreach (Collider hit in hitColliders)
+        {
+
+            Vector3 directionToObject = hit.transform.position - playerTransform.position;
+            float angle = Vector3.Angle(playerTransform.forward, directionToObject);
+
+            if (angle < lowestAngle && ObjectProneToInteraction(hit.gameObject))
+            {
+                lowestAngle = angle;
+                nearestObject = hit.gameObject;
+            }
+        }
+        return nearestObject;
+    }
+
     public bool ObjectProneToInteraction(GameObject gameObject)
     {
         if (gameObject.GetComponent<BreakableObject>() != null || gameObject.GetComponent<InteractionObject>() != null || gameObject.GetComponent<TurnOff>() != null)
@@ -274,6 +340,12 @@ public class GhostForm : MovementType
     }
     public void TurnColor(Color color, GameObject hitData)
     {
+        if (explosions.Contains(hitData.GetComponent<BreakableObject>()))
+        {
+            //FIXME: don't highlight actiated objects. This is a hack, find a better way
+            return;
+        }
+
         if (hitData.GetComponentInChildren<MeshRenderer>() != null)
         {
             hitData.GetComponentInChildren<MeshRenderer>().material.color = color;
@@ -298,6 +370,7 @@ public class GhostForm : MovementType
     {
         playerAction.OnParkourGlobal -= InitializeDash;
         playerAction.OnGhostGlobal -= LeaveGhostForm;
-        playerAction.OnAttackGlobal -= Attack;
+        playerAction.OnAttackGlobal -= Teleport;
+        playerAction.OnShootGlobal -= Interact;
     }
 }
