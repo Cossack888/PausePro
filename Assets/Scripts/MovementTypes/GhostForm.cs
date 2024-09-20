@@ -12,12 +12,16 @@ public class GhostForm : MovementType
     float timer;
     float time;
     private float timeElapsed;
+    private float highlightTimer;
+    private bool highlightTimerOn;
     private bool dashTimer;
     public Vector3 previousPosition;
     private GameObject playerBody;
     private List<ForceData> savedForces = new List<ForceData>();
     private List<TurnOff> savedTurnOffs = new List<TurnOff>();
     private List<BreakableObject> explosions = new List<BreakableObject>();
+    private List<GameObject> redObjects = new List<GameObject>();
+    private GameObject highlightedObject;
     public GhostForm(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
         action.OnParkourGlobal += InitializeDash;
@@ -46,6 +50,7 @@ public class GhostForm : MovementType
         {
             enemy.isStationary = true;
         }
+        HighlightStuff();
     }
 
     public override void FixedUpdateMovement()
@@ -63,6 +68,7 @@ public class GhostForm : MovementType
         timer += Time.deltaTime;
         movement = new Vector3(playerAction.Movement.x, 0f, playerAction.Movement.y);
         timeElapsed += Time.deltaTime;
+        FindObjectInFocus();
         if (dashTimer == true)
         {
             if (timeElapsed > 0.5)
@@ -71,7 +77,17 @@ public class GhostForm : MovementType
                 dashTimer = false;
             }
         }
-
+        if (highlightTimerOn == true)
+        {
+            highlightTimer += Time.deltaTime;
+            if (highlightTimer > 0.5f && highlightedObject != null)
+            {
+                TurnColor(Color.white, highlightedObject);
+                highlightTimer = 0;
+                highlightTimerOn = false;
+                highlightedObject = null;
+            }
+        }
         if (Input.GetKeyDown(KeyCode.E))
         {
             SaveForce();
@@ -81,10 +97,7 @@ public class GhostForm : MovementType
         {
             ApplySavedForces();
         }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            HighlightStuff();
-        }
+
         if (Input.GetKeyDown(KeyCode.Y))
         {
             TransportObjectToPlayer();
@@ -127,6 +140,28 @@ public class GhostForm : MovementType
         playerController.DestroyPlayerBody();
         ApplySavedForces();
         AudioManager.instance.SwitchToAlbum("flesh");
+    }
+
+    public void FindObjectInFocus()
+    {
+        if (Physics.Raycast(playerController.Cam.position, playerController.Cam.forward, out RaycastHit hit, Mathf.Infinity, playerController.GhostInteractionLayer))
+        {
+            GameObject objectInFocus = hit.collider.gameObject;
+            if (highlightedObject != null && highlightedObject != objectInFocus)
+            {
+                TurnColor(Color.green, highlightedObject);
+            }
+            TurnColor(Color.blue, objectInFocus);
+            highlightedObject = objectInFocus;
+        }
+        else
+        {
+            if (highlightedObject != null)
+            {
+                TurnColor(Color.green, highlightedObject);
+                highlightedObject = null;
+            }
+        }
     }
 
     public void ApplyForce()
@@ -175,6 +210,7 @@ public class GhostForm : MovementType
             GameObject hitData = hit.collider.gameObject;
 
             TurnColor(Color.red, hitData);
+            redObjects.Add(hitData);
             if (breakable != null)
             {
                 breakable.RiggExplosion();
@@ -274,15 +310,19 @@ public class GhostForm : MovementType
     }
     public void TurnColor(Color color, GameObject hitData)
     {
-        if (hitData.GetComponentInChildren<MeshRenderer>() != null)
+        if (!redObjects.Contains(hitData))
         {
-            hitData.GetComponentInChildren<MeshRenderer>().material.color = color;
-        }
-        if (hitData.GetComponentInChildren<SpriteRenderer>() != null)
-        {
-            hitData.GetComponentInChildren<SpriteRenderer>().color = color;
+            if (hitData.GetComponentInChildren<MeshRenderer>() != null)
+            {
+                hitData.GetComponentInChildren<MeshRenderer>().material.color = color;
+            }
+            if (hitData.GetComponentInChildren<SpriteRenderer>() != null)
+            {
+                hitData.GetComponentInChildren<SpriteRenderer>().color = color;
+            }
         }
     }
+
     public void LeaveGhostForm()
     {
         if (playerController.CurrentMovement == this && timer > 1)
