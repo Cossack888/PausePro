@@ -72,6 +72,9 @@ public class GhostForm : MovementType
             }
         }
 
+
+        HighlightStuff();
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             SaveForce();
@@ -81,10 +84,11 @@ public class GhostForm : MovementType
         {
             ApplySavedForces();
         }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            HighlightStuff();
-        }
+        // /if (Input.GetKeyDown(KeyCode.T))
+        // {
+        //     Debug.Log("Highlight stuff");
+        //     HighlightStuff();
+        // }
         if (Input.GetKeyDown(KeyCode.Y))
         {
             TransportObjectToPlayer();
@@ -105,7 +109,15 @@ public class GhostForm : MovementType
     }
     public void Attack()
     {
-        playerController.GhostRightHand.SetTrigger("Slash");
+        //playerController.GhostRightHand.SetTrigger("Slash");
+        GameObject objectInFocus = FindObjectInFocus();
+
+        //FIXME: what this does should depend on the type of the object
+        //maybe have the specific actions defined in the object we interact with?
+        if (ObjectProneToInteraction(objectInFocus))
+        {
+            objectInFocus.transform.position = playerTransform.position + playerTransform.forward;
+        }
     }
     public override void ExitMovement()
     {
@@ -252,6 +264,7 @@ public class GhostForm : MovementType
             }
         }
     }
+
     void HighlightStuff()
     {
         Debug.Log("Running the HighlightStuff action");
@@ -265,7 +278,63 @@ public class GhostForm : MovementType
             if (ObjectProneToInteraction(hit.gameObject))
                 TurnColor(Color.green, hit.gameObject);
         }
+
+        GameObject objectInFocus = FindObjectInFocus();
+        if (objectInFocus != null)
+        {
+            Debug.Log("Found objectInFocus:" + objectInFocus.name);
+            TurnColor(Color.blue, objectInFocus);
+        }
     }
+
+    GameObject FindObjectInFocus()
+    {
+        float sphereRadius = 10000.0f;
+        LayerMask targetMask = Physics.AllLayers;
+        Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, sphereRadius, targetMask);
+
+        GameObject nearestObject = null;
+        float lowestAngle = Mathf.Infinity;
+
+        foreach (Collider hit in hitColliders)
+        {
+
+            Vector3 directionToObject = hit.transform.position - playerTransform.position;
+            float angle = Vector3.Angle(playerTransform.forward, directionToObject);
+
+            if (angle < lowestAngle && ObjectProneToInteraction(hit.gameObject))
+            {
+                lowestAngle = angle;
+                nearestObject = hit.gameObject;
+            }
+        }
+        return nearestObject;
+    }
+
+
+    // GameObject FindNearestEnemy()
+    // {
+    //     // Znajdź wszystkie obiekty na warstwie przeciwników w świecie
+    //     Collider[] enemiesInRange = Physics.OverlapSphere(transform.position, snapRadius, enemyLayer);
+
+    //     GameObject nearestEnemy = null;
+    //     float closestDistance = Mathf.Infinity;
+
+    //     foreach (Collider enemy in enemiesInRange)
+    //     {
+    //         float distance = Vector3.Distance(transform.position, enemy.transform.position);
+
+    //         if (distance < closestDistance)
+    //         {
+    //             closestDistance = distance;
+    //             nearestEnemy = enemy.gameObject;
+    //         }
+    //     }
+
+    //     return nearestEnemy;    
+    // }
+
+
     public bool ObjectProneToInteraction(GameObject gameObject)
     {
         if (gameObject.GetComponent<BreakableObject>() != null || gameObject.GetComponent<InteractionObject>() != null || gameObject.GetComponent<TurnOff>() != null)
