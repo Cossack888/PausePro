@@ -1,6 +1,7 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class RegularMovement : MovementType
 {
@@ -50,7 +51,32 @@ public class RegularMovement : MovementType
 
     public void ApplyForce()
     {
+        Vector3 start = playerTransform.position;
+        Vector3 direction = playerController.Cam.transform.forward;
 
+        if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
+        {
+            InteractionObject hitObject = hit.collider.gameObject.GetComponent<InteractionObject>();
+            if (hitObject != null && !hitObject.hasBeenPushed)
+            {
+                NavMeshAgent navMeshAgent = hit.collider.GetComponent<NavMeshAgent>();
+                EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
+                Rigidbody rb = hitObject.GetComponent<Rigidbody>();
+                rb.isKinematic = false;
+                if (navMeshAgent != null)
+                {
+                    navMeshAgent.enabled = false;
+                }
+                if (enemy != null)
+                {
+                    enemy.enabled = false;
+                }
+                Vector3 forceDirection = (hit.point - start).normalized;
+                rb.AddForceAtPosition(forceDirection * 10, hit.point, ForceMode.Impulse);
+
+                hitObject.Push();
+            }
+        }
     }
 
     public void Jump()
