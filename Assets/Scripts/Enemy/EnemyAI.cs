@@ -172,7 +172,6 @@ public abstract class EnemyAI : MonoBehaviour
     {
         navMeshAgent.enabled = false;
         rigidBody.isKinematic = false;
-        rigidBody.AddForceAtPosition(forceDirection * 30, hitPoint, ForceMode.Impulse);
-        interactionObject.Push();
+        interactionObject.ApplyForce(forceDirection, hitPoint);
     }
 }
