@@ -13,6 +13,7 @@ public class GhostForm : MovementType
     float time;
     private float timeElapsed;
     private bool dashTimer;
+    private bool inGhostForm = true;
     private float cooldown;
     public Vector3 previousPosition;
     private GameObject playerBody;
@@ -54,6 +55,7 @@ public class GhostForm : MovementType
         {
             enemy.isStationary = true;
         }
+        inGhostForm = true;
         HighlightStuff();
     }
 
@@ -73,11 +75,11 @@ public class GhostForm : MovementType
         movement = new Vector3(playerAction.Movement.x, 0f, playerAction.Movement.y);
         timeElapsed += Time.deltaTime;
         cooldown -= Time.deltaTime;
+        HighlightObject();
         if (cooldown <= 0)
         {
             LeaveGhostForm();
         }
-        FindObjectInFocus();
         if (dashTimer == true)
         {
             if (timeElapsed > 0.5)
@@ -121,6 +123,7 @@ public class GhostForm : MovementType
     }
     public override void ExitMovement()
     {
+        inGhostForm = false;
         playerRigidbody.useGravity = true;
         foreach (Animator anim in GameObject.FindObjectsOfType<Animator>())
         {
@@ -148,28 +151,76 @@ public class GhostForm : MovementType
         playerController.DestroyPlayerBody();
         ApplySavedForces();
         AudioManager.instance.SwitchToAlbum("flesh");
+
+        UnhighlightStuff();
     }
 
-    public void FindObjectInFocus()
+    public void HighlightObject()
+    {
+        if (!inGhostForm)
+        {
+            return;
+        } 
+
+        GameObject currentFocusedObject = FindObjectInFocusWithRaycast();
+        if (currentFocusedObject == null) {
+            currentFocusedObject = FindObjectInFocusWithOverlapSphere();
+        }
+
+        if (highlightedObject != null && highlightedObject != currentFocusedObject)
+        {
+            TurnColor(Color.green, highlightedObject);
+        }
+
+        if (currentFocusedObject != null)
+        {
+            TurnColor(Color.blue, currentFocusedObject);
+        }
+
+        highlightedObject = currentFocusedObject;
+    }
+
+    GameObject FindObjectInFocusWithRaycast()
     {
         if (Physics.Raycast(playerController.Cam.position, playerController.Cam.forward, out RaycastHit hit, Mathf.Infinity, playerController.GhostInteractionLayer))
         {
-            GameObject objectInFocus = hit.collider.gameObject;
-            if (highlightedObject != null && highlightedObject != objectInFocus)
+            if (ObjectProneToInteraction(hit.collider.gameObject))
             {
-                TurnColor(Color.green, highlightedObject);
+                Debug.Log("Found with raycast: " + hit.collider.gameObject.name);        
+                return hit.collider.gameObject;
             }
-            TurnColor(Color.blue, objectInFocus);
-            highlightedObject = objectInFocus;
+            else
+            {
+                return null;
+            }
         }
-        else
+        return null;
+    }
+
+    GameObject FindObjectInFocusWithOverlapSphere()
+    {
+        float sphereRadius = 10000.0f;
+        LayerMask targetMask = Physics.AllLayers;
+        Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, sphereRadius, targetMask);
+
+        Transform camera = playerController.GhostCam.transform;
+
+        GameObject nearestObject = null;
+        float lowestAngle = Mathf.Infinity;
+
+        foreach (Collider hit in hitColliders)
         {
-            if (highlightedObject != null)
+            Vector3 directionToObject = hit.transform.position - camera.position;
+            float angle = Vector3.Angle(camera.forward, directionToObject);
+
+            if (angle < lowestAngle && ObjectProneToInteraction(hit.gameObject))
             {
-                TurnColor(Color.green, highlightedObject);
-                highlightedObject = null;
+                lowestAngle = angle;
+                nearestObject = hit.gameObject;
             }
         }
+        Debug.Log("Found with overlapSphere: " + nearestObject.name);        
+        return nearestObject;
     }
 
     public void ApplyForce()
@@ -247,13 +298,10 @@ public class GhostForm : MovementType
 
     public void ApplySavedForces()
     {
-        //wait for 1 second before applying the forces
         while (time < 1)
         {
             time += Time.deltaTime;
         }
-        //for each ghost interaction
-        //apply the interaction
 
         foreach (ForceData forceData in savedForces)
         {
@@ -261,25 +309,6 @@ public class GhostForm : MovementType
                 forceData.enemy.ApplyForce(forceData.forceDirection, forceData.hitPoint);
         }
 
-        // while (time < 1)
-        // {
-        //     time += Time.deltaTime;
-        // }
-        // foreach (ForceData forceData in savedForces)
-        // {
-        //     if (forceData.navMeshAgent != null)
-        //     {
-        //         forceData.navMeshAgent.enabled = false;
-        //     }
-        //     if (forceData.enemy != null)
-        //     {
-        //         //disables the enemyAI, NOT the whole enemy
-        //         forceData.enemy.enabled = false;
-        //     }
-        //     forceData.rb.isKinematic = false;
-        //     forceData.rb.AddForceAtPosition(forceData.forceDirection * 30, forceData.hitPoint, ForceMode.Impulse);
-        //     forceData.interactionObject.Push();
-        // }
         foreach (TurnOff turnOff in savedTurnOffs)
         {
             if (turnOff.on == false)
@@ -297,6 +326,7 @@ public class GhostForm : MovementType
         savedForces.Clear();
         savedTurnOffs.Clear();
     }
+
     public void TransportObjectToPlayer()
     {
         LayerMask mask = Physics.AllLayers;
@@ -310,8 +340,8 @@ public class GhostForm : MovementType
             }
         }
     }
-    void HighlightStuff()
-    {
+
+    void ChangeColorOfObjectsProneToInteraction(Color color) {
         float sphereRadius = 10000.0f;
         LayerMask targetMask = Physics.AllLayers;
         Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, sphereRadius, targetMask);
@@ -320,9 +350,23 @@ public class GhostForm : MovementType
         {
             greenObjects.Add(hit.gameObject);
             if (ObjectProneToInteraction(hit.gameObject))
-                TurnColor(Color.green, hit.gameObject);
+                TurnColor(color, hit.gameObject);
         }
+
     }
+
+    void HighlightStuff()
+    {
+        ChangeColorOfObjectsProneToInteraction(Color.green);
+    }
+    
+    void UnhighlightStuff()
+    {
+        ChangeColorOfObjectsProneToInteraction(Color.white);
+    }
+
+
+
     public bool ObjectProneToInteraction(GameObject gameObject)
     {
         if (gameObject.GetComponent<BreakableObject>() != null || gameObject.GetComponent<InteractionObject>() != null || gameObject.GetComponent<TurnOff>() != null)
