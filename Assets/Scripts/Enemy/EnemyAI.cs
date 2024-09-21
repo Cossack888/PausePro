@@ -1,6 +1,6 @@
-using System;
+
 using System.Collections;
-using System.Collections.Generic;  // This is optional but often used for collections like List<T>
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,6 +11,7 @@ public abstract class EnemyAI : MonoBehaviour
     public Vector3 currentTarget;
     public bool stopped;
     public Animator anim;
+    EnemySpawner spawner;
     [SerializeField] protected float throwDistance;
     [SerializeField] protected float throwSpeed;
     [SerializeField] protected float attackDistance;
@@ -39,6 +40,7 @@ public abstract class EnemyAI : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
         rigidBody = GetComponent<Rigidbody>();
         interactionObject = GetComponent<InteractionObject>();
+        spawner = FindObjectOfType<EnemySpawner>();
     }
 
     // NavMeshAgent agent;
@@ -94,14 +96,36 @@ public abstract class EnemyAI : MonoBehaviour
         }
         else
         {
-            /*
-            if(navMeshAgent.enabled) {
-                navMeshAgent.isStopped = true;
-            }*/
+            if (navMeshAgent.enabled)
+            {
+                Patrol();
+            }
+        }
+    }
+
+    public void Patrol()
+    {
+        if (!navMeshAgent.hasPath || navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        {
+            Vector3 patrolPoint = GetRandomPatrolPoint(10f);
+            if (patrolPoint != Vector3.zero)
+            {
+                navMeshAgent.SetDestination(patrolPoint);
+            }
+        }
+    }
+    public Vector3 GetRandomPatrolPoint(float patrolRadius)
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * patrolRadius;
+        randomDirection += transform.position;
+
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(randomDirection, out hit, patrolRadius, NavMesh.AllAreas))
+        {
+            return hit.position;
         }
 
-        //currentTarget=navMeshAgent.destination;
-        //stopped=navMeshAgent.isStopped;
+        return Vector3.zero;
     }
 
     public void UnpauseEnemy()
