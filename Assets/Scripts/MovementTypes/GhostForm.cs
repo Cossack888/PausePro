@@ -13,6 +13,7 @@ public class GhostForm : MovementType
     float time;
     private float timeElapsed;
     private bool dashTimer;
+    private bool inGhostForm = true;
     private float cooldown;
     public Vector3 previousPosition;
     private GameObject playerBody;
@@ -54,6 +55,7 @@ public class GhostForm : MovementType
         {
             enemy.isStationary = true;
         }
+        inGhostForm = true;
         HighlightStuff();
     }
 
@@ -73,11 +75,11 @@ public class GhostForm : MovementType
         movement = new Vector3(playerAction.Movement.x, 0f, playerAction.Movement.y);
         timeElapsed += Time.deltaTime;
         cooldown -= Time.deltaTime;
+        HighlightObject();
         if (cooldown <= 0)
         {
             LeaveGhostForm();
         }
-        HighlightObject();
         if (dashTimer == true)
         {
             if (timeElapsed > 0.5)
@@ -121,6 +123,7 @@ public class GhostForm : MovementType
     }
     public override void ExitMovement()
     {
+        inGhostForm = false;
         playerRigidbody.useGravity = true;
         foreach (Animator anim in GameObject.FindObjectsOfType<Animator>())
         {
@@ -148,10 +151,17 @@ public class GhostForm : MovementType
         playerController.DestroyPlayerBody();
         ApplySavedForces();
         AudioManager.instance.SwitchToAlbum("flesh");
+
+        UnhighlightStuff();
     }
 
     public void HighlightObject()
     {
+        if (!inGhostForm)
+        {
+            return;
+        } 
+
         GameObject currentFocusedObject = FindObjectInFocusWithRaycast();
         if (currentFocusedObject == null) {
             currentFocusedObject = FindObjectInFocusWithOverlapSphere();
@@ -330,8 +340,8 @@ public class GhostForm : MovementType
             }
         }
     }
-    void HighlightStuff()
-    {
+
+    void ChangeColorOfObjectsProneToInteraction(Color color) {
         float sphereRadius = 10000.0f;
         LayerMask targetMask = Physics.AllLayers;
         Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, sphereRadius, targetMask);
@@ -340,9 +350,23 @@ public class GhostForm : MovementType
         {
             greenObjects.Add(hit.gameObject);
             if (ObjectProneToInteraction(hit.gameObject))
-                TurnColor(Color.green, hit.gameObject);
+                TurnColor(color, hit.gameObject);
         }
+
     }
+
+    void HighlightStuff()
+    {
+        ChangeColorOfObjectsProneToInteraction(Color.green);
+    }
+    
+    void UnhighlightStuff()
+    {
+        ChangeColorOfObjectsProneToInteraction(Color.white);
+    }
+
+
+
     public bool ObjectProneToInteraction(GameObject gameObject)
     {
         if (gameObject.GetComponent<BreakableObject>() != null || gameObject.GetComponent<InteractionObject>() != null || gameObject.GetComponent<TurnOff>() != null)
