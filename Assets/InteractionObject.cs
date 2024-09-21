@@ -38,7 +38,7 @@ public class InteractionObject : MonoBehaviour
         }
 
         Invoke("CheckForMotion", 0.5f);
-        Invoke("ResetBeingPushed", 5);
+        //Invoke("ResetBeingPushed", 5);
     }
     public void CheckForMotion()
     {
@@ -59,6 +59,10 @@ public class InteractionObject : MonoBehaviour
                 enemyAI.enabled = true;
                 enemyAI.ReenableNavMeshAgent();
             }
+
+        }
+        else
+        {
             rb.isKinematic = true;
         }
 

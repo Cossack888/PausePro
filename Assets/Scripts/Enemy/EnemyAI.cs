@@ -174,19 +174,5 @@ public abstract class EnemyAI : MonoBehaviour
         rigidBody.isKinematic = false;
         rigidBody.AddForceAtPosition(forceDirection * 30, hitPoint, ForceMode.Impulse);
         interactionObject.Push();
-        //this.enabled = false;
-
-        // if (forceData.navMeshAgent != null)
-        // {
-        //     forceData.navMeshAgent.enabled = false;
-        // }
-        // if (forceData.enemy != null)
-        // {
-        //     //disables the enemyAI, NOT the whole enemy
-        //     forceData.enemy.enabled = false;
-        // }
-        // forceData.rb.isKinematic = false;
-        // forceData.rb.AddForceAtPosition(forceData.forceDirection * 30, forceData.hitPoint, ForceMode.Impulse);
-        // forceData.interactionObject.Push();
     }
 }
