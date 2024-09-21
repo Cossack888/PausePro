@@ -274,8 +274,16 @@ public class GhostForm : MovementType
 
         foreach (ForceData forceData in savedForces)
         {
-            if (forceData != null && forceData.enemy != null)
-                forceData.enemy.ApplyForce(forceData.forceDirection, forceData.hitPoint);
+            if (forceData != null)
+            {
+                if (forceData.enemy != null)
+                {
+                    forceData.enemy.ApplyForce(forceData.forceDirection, forceData.hitPoint);
+                } else if (forceData.interactionObject != null)
+                {
+                    forceData.interactionObject.ApplyForce(forceData.forceDirection, forceData.hitPoint);
+                }
+            }
         }
 
         foreach (TurnOff turnOff in savedTurnOffs)
