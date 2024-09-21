@@ -285,7 +285,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -338,7 +338,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -391,7 +391,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationX:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -444,7 +444,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -4795,7 +4795,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 424980}
-  - component: {fileID: 11447354}
   m_Layer: 8
   m_Name: MeteorSwarm
   m_TagString: Untagged
@@ -4820,68 +4819,6 @@ Transform:
   - {fileID: 414434}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &11447354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 165786}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69a6bf343df323040a372aa4198de5b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AudioSource: {fileID: 0}
-  StartTime: 1
-  StopTime: 3
-  Duration: 3
-  ForceAmount: 0
-  ForceRadius: 0
-  IsProjectile: 0
-  ManualParticleSystems:
-  - {fileID: 19841648}
-  - {fileID: 19873038}
-  MeteorPrefab: {fileID: 164416, guid: 8aeb2c0224fe763499eed3ec0587162b, type: 3}
-  MeteorExplosionParticleSystem: {fileID: 19841648}
-  MeteorShrapnelParticleSystem: {fileID: 19873038}
-  MeteorMaterials:
-  - {fileID: 2100000, guid: c975a23d2a12fb04cb68170f0ba3b056, type: 2}
-  - {fileID: 2100000, guid: 06bcc524020473946802a42e97a47794, type: 2}
-  - {fileID: 2100000, guid: 3a0fd5be2a3fcea46aeeee98d9790939, type: 2}
-  - {fileID: 2100000, guid: 9f663aa0d3dc3f44389306ed68c6c668, type: 2}
-  MeteorMeshes:
-  - {fileID: 4300000, guid: 04bd492e0e5d35a48a3f6c6ac3f3eba6, type: 3}
-  - {fileID: 4300006, guid: 371ed6c0dd75f6a4ebd1dfcb0b578b46, type: 3}
-  - {fileID: 4300004, guid: 371ed6c0dd75f6a4ebd1dfcb0b578b46, type: 3}
-  - {fileID: 4300008, guid: 371ed6c0dd75f6a4ebd1dfcb0b578b46, type: 3}
-  - {fileID: 4300002, guid: 371ed6c0dd75f6a4ebd1dfcb0b578b46, type: 3}
-  - {fileID: 4300000, guid: 371ed6c0dd75f6a4ebd1dfcb0b578b46, type: 3}
-  - {fileID: 4300010, guid: 371ed6c0dd75f6a4ebd1dfcb0b578b46, type: 3}
-  DestinationRadius: 25
-  Source: {x: 50, y: 100, z: -50}
-  SourceRadius: 10
-  TimeToImpact: 1
-  MeteorsPerSecondRange:
-    Minimum: 10
-    Maximum: 20
-  ScaleRange:
-    Minimum: 0.25
-    Maximum: 1
-  MeteorLifeTimeRange:
-    Minimum: 4
-    Maximum: 8
-  EmissionSounds:
-  - {fileID: 8300000, guid: da5aeec65dfce4d449024607b399a5ec, type: 3}
-  - {fileID: 8300000, guid: ca679721d8a1b6243acc9a7ce566789b, type: 3}
-  - {fileID: 8300000, guid: 04f423841d9fff345a394fdb44f4bac4, type: 3}
-  ExplosionSounds:
-  - {fileID: 8300000, guid: 31dbe1f047a081845bd95a5b256ee829, type: 3}
-  - {fileID: 8300000, guid: b57a5b81c8663e14bbf70a3cc6ff01ad, type: 3}
-  - {fileID: 8300000, guid: 83a3d45944f24b647a973099cc6fb1d3, type: 3}
-  - {fileID: 8300000, guid: 222141dd968fb6447b5c790b6d87a27b, type: 3}
-  - {fileID: 8300000, guid: 0dcfe736485e63542b5036dc5b360032, type: 3}
-  - {fileID: 8300000, guid: 15b61cecc9c413944b23744fbd523914, type: 3}
 --- !u!1 &180176
 GameObject:
   m_ObjectHideFlags: 0
@@ -5167,7 +5104,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -5220,7 +5157,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
