@@ -9962,7 +9962,7 @@ PrefabInstance:
       objectReference: {fileID: 1690346947}
     - target: {fileID: 49571628480697709, guid: 44467cbe3da520b42bc710852f7f4bde, type: 3}
       propertyPath: m_VersionIndex
-      value: 1014
+      value: 1020
       objectReference: {fileID: 0}
     - target: {fileID: 3399714108343838044, guid: 44467cbe3da520b42bc710852f7f4bde, type: 3}
       propertyPath: m_Name
@@ -10562,6 +10562,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 5465052501293276019}
+  currentTarget: {x: 0, y: 0, z: 0}
+  stopped: 0
   anim: {fileID: 0}
   throwDistance: 1.5
   throwSpeed: 1

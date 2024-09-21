@@ -78,14 +78,18 @@ public abstract class EnemyAI : MonoBehaviour
             {
                 //this should only happen if the enemy is an a surface
                 //and has navmeshagent enabled. Fix the conditions
-                if(navMeshAgent.enabled) {
-                    Debug.Log("HandleMovement");
+                if (navMeshAgent.enabled)
+                {
                     HandleMovement();
                 }
             }
             else
             {
-                HandleCombat(distanceToPlayer);
+                if (navMeshAgent.enabled)
+                {
+                    HandleCombat(distanceToPlayer);
+                }
+
             }
         }
         else
@@ -95,9 +99,9 @@ public abstract class EnemyAI : MonoBehaviour
                 navMeshAgent.isStopped = true;
             }*/
         }
-        
-//currentTarget=navMeshAgent.destination;
-//stopped=navMeshAgent.isStopped;
+
+        //currentTarget=navMeshAgent.destination;
+        //stopped=navMeshAgent.isStopped;
     }
 
     public void UnpauseEnemy()
@@ -172,17 +176,17 @@ public abstract class EnemyAI : MonoBehaviour
         interactionObject.Push();
         //this.enabled = false;
 
-            // if (forceData.navMeshAgent != null)
-            // {
-            //     forceData.navMeshAgent.enabled = false;
-            // }
-            // if (forceData.enemy != null)
-            // {
-            //     //disables the enemyAI, NOT the whole enemy
-            //     forceData.enemy.enabled = false;
-            // }
-            // forceData.rb.isKinematic = false;
-            // forceData.rb.AddForceAtPosition(forceData.forceDirection * 30, forceData.hitPoint, ForceMode.Impulse);
-            // forceData.interactionObject.Push();
+        // if (forceData.navMeshAgent != null)
+        // {
+        //     forceData.navMeshAgent.enabled = false;
+        // }
+        // if (forceData.enemy != null)
+        // {
+        //     //disables the enemyAI, NOT the whole enemy
+        //     forceData.enemy.enabled = false;
+        // }
+        // forceData.rb.isKinematic = false;
+        // forceData.rb.AddForceAtPosition(forceData.forceDirection * 30, forceData.hitPoint, ForceMode.Impulse);
+        // forceData.interactionObject.Push();
     }
 }

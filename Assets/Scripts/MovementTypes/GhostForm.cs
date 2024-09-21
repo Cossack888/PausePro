@@ -253,9 +253,10 @@ public class GhostForm : MovementType
             time += Time.deltaTime;
         }
         //for each ghost interaction
-            //apply the interaction
-        
-        foreach (ForceData forceData in savedForces) {
+        //apply the interaction
+
+        foreach (ForceData forceData in savedForces)
+        {
             forceData.enemy.ApplyForce(forceData.forceDirection, forceData.hitPoint);
         }
 
@@ -310,7 +311,6 @@ public class GhostForm : MovementType
     }
     void HighlightStuff()
     {
-        Debug.Log("Running the HighlightStuff action");
         float sphereRadius = 10000.0f;
         LayerMask targetMask = Physics.AllLayers;
         Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, sphereRadius, targetMask);
@@ -318,7 +318,6 @@ public class GhostForm : MovementType
         foreach (Collider hit in hitColliders)
         {
             greenObjects.Add(hit.gameObject);
-            Debug.Log("Hit " + hit.transform.name);
             if (ObjectProneToInteraction(hit.gameObject))
                 TurnColor(Color.green, hit.gameObject);
         }
