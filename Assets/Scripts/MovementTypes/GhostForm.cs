@@ -29,7 +29,7 @@ public class GhostForm : MovementType
         action.OnParkourGlobal += InitializeDash;
         action.OnGhostGlobal += LeaveGhostForm;
         action.OnAttackGlobal += TransportObjectToPlayer;
-        action.OnShootGlobal += SaveForce;
+        action.OnShootGlobal += SaveInteraction;
         gameManager = GameObject.FindObjectOfType<GameManager>();
     }
 
@@ -160,9 +160,9 @@ public class GhostForm : MovementType
     {
         if (Physics.Raycast(playerController.Cam.position, playerController.Cam.forward, out RaycastHit hit, Mathf.Infinity, playerController.GhostInteractionLayer))
         {
-            if (ObjectProneToInteraction(hit.collider.gameObject))
+
+            if (InteractionUtils.ObjectProneToInteraction(hit.collider.gameObject))
             {
-                Debug.Log("Found with raycast: " + hit.collider.gameObject.name);
                 return hit.collider.gameObject;
             }
             else
@@ -189,17 +189,16 @@ public class GhostForm : MovementType
             Vector3 directionToObject = hit.transform.position - camera.position;
             float angle = Vector3.Angle(camera.forward, directionToObject);
 
-            if (angle < lowestAngle && ObjectProneToInteraction(hit.gameObject))
+            if (angle < lowestAngle && InteractionUtils.ObjectProneToInteraction(hit.gameObject))
             {
                 lowestAngle = angle;
                 nearestObject = hit.gameObject;
             }
         }
-        Debug.Log("Found with overlapSphere: " + nearestObject.name);
         return nearestObject;
     }
 
-    public void SaveForce()
+    public void SaveInteraction()
     {
         Vector3 start = playerController.Cam.transform.position;
         Vector3 direction = playerController.Cam.transform.forward;
@@ -212,6 +211,7 @@ public class GhostForm : MovementType
             TurnOff turnOff = objectInFocus.GetComponent<TurnOff>();
             InteractionObject hitObject = objectInFocus.gameObject.GetComponent<InteractionObject>();
             BreakableObject breakable = objectInFocus.GetComponent<BreakableObject>();
+            Glyph glyph = objectInFocus.GetComponent<Glyph>();
             //FIXME
             //GameObject hitData = objectInFocus;
 
@@ -241,6 +241,11 @@ public class GhostForm : MovementType
                 savedForces.Add(new ForceData(rb, hitObject, forceDirection, objectInFocus.transform.position, navMeshAgent, enemy));
                 Debug.Log("Forces:    " + savedForces.Count);
             }
+
+            if (glyph != null)
+            {
+                glyph.Active = true;
+            }
         }
     }
 
@@ -249,6 +254,24 @@ public class GhostForm : MovementType
         while (time < 1)
         {
             time += Time.deltaTime;
+        }
+
+        Glyph[] glyphs = Object.FindObjectsOfType<Glyph>();
+        List<IInteractionEffect> initialGlyphInteractionEffects = new();
+        List<IInteractionEffect> finalGlyphInteractionEffects = new();
+
+        foreach (Glyph glyph in glyphs)
+        {
+            if (glyph.Active)
+            {
+                initialGlyphInteractionEffects.Add(glyph.InitialAction());
+                finalGlyphInteractionEffects.Add(glyph.FinalAction());
+                glyph.Active = false;
+            }
+        }
+        foreach (IInteractionEffect effect in initialGlyphInteractionEffects)
+        {
+            effect.ApplyEffect();
         }
 
         foreach (ForceData forceData in savedForces)
@@ -281,6 +304,11 @@ public class GhostForm : MovementType
         }
         savedForces.Clear();
         savedTurnOffs.Clear();
+
+        foreach (IInteractionEffect effect in finalGlyphInteractionEffects)
+        {
+            effect.ApplyEffect();
+        }
     }
 
     public void TransportObjectToPlayer()
@@ -289,7 +317,7 @@ public class GhostForm : MovementType
         if (Physics.Raycast(playerTransform.position, playerTransform.forward, out RaycastHit hit, Mathf.Infinity, mask))
         {
             GameObject hitObject = hit.collider.gameObject;
-            if (ObjectProneToInteraction(hitObject))
+            if (InteractionUtils.ObjectProneToInteraction(hitObject))
             {
                 hitObject.transform.position = playerTransform.position + playerTransform.forward;
                 TurnColor(Color.white, hitObject);
@@ -306,7 +334,7 @@ public class GhostForm : MovementType
         foreach (Collider hit in hitColliders)
         {
             greenObjects.Add(hit.gameObject);
-            if (ObjectProneToInteraction(hit.gameObject))
+            if (InteractionUtils.ObjectProneToInteraction(hit.gameObject))
                 TurnColor(color, hit.gameObject);
         }
 
@@ -322,19 +350,6 @@ public class GhostForm : MovementType
         ChangeColorOfObjectsProneToInteraction(Color.white);
     }
 
-
-    public bool ObjectProneToInteraction(GameObject gameObject)
-    {
-        if (gameObject.GetComponent<BreakableObject>() != null || 
-            gameObject.GetComponent<InteractionObject>() != null ||
-            gameObject.GetComponent<TurnOff>() != null ||
-            gameObject.GetComponent<Glyph>() != null
-            )
-            return true;
-        else return false;
-
-        //return gameObject.GetComponent<IProneToInteraction>() != null;
-    }
 
     public void TurnColor(Color color, GameObject hitData)
     {
@@ -367,6 +382,6 @@ public class GhostForm : MovementType
         playerAction.OnParkourGlobal -= InitializeDash;
         playerAction.OnGhostGlobal -= LeaveGhostForm;
         playerAction.OnAttackGlobal -= TransportObjectToPlayer;
-        playerAction.OnShootGlobal -= SaveForce;
+        playerAction.OnShootGlobal -= SaveInteraction;
     }
 }
