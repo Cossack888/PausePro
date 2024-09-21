@@ -247,25 +247,37 @@ public class GhostForm : MovementType
 
     public void ApplySavedForces()
     {
-
+        //wait for 1 second before applying the forces
         while (time < 1)
         {
             time += Time.deltaTime;
         }
-        foreach (ForceData forceData in savedForces)
-        {
-            if (forceData.navMeshAgent != null)
-            {
-                forceData.navMeshAgent.enabled = false;
-            }
-            if (forceData.enemy != null)
-            {
-                forceData.enemy.enabled = false;
-            }
-            forceData.rb.isKinematic = false;
-            forceData.rb.AddForceAtPosition(forceData.forceDirection * 30, forceData.hitPoint, ForceMode.Impulse);
-            forceData.interactionObject.Push();
+        //for each ghost interaction
+            //apply the interaction
+        
+        foreach (ForceData forceData in savedForces) {
+            forceData.enemy.ApplyForce(forceData.forceDirection, forceData.hitPoint);
         }
+
+        // while (time < 1)
+        // {
+        //     time += Time.deltaTime;
+        // }
+        // foreach (ForceData forceData in savedForces)
+        // {
+        //     if (forceData.navMeshAgent != null)
+        //     {
+        //         forceData.navMeshAgent.enabled = false;
+        //     }
+        //     if (forceData.enemy != null)
+        //     {
+        //         //disables the enemyAI, NOT the whole enemy
+        //         forceData.enemy.enabled = false;
+        //     }
+        //     forceData.rb.isKinematic = false;
+        //     forceData.rb.AddForceAtPosition(forceData.forceDirection * 30, forceData.hitPoint, ForceMode.Impulse);
+        //     forceData.interactionObject.Push();
+        // }
         foreach (TurnOff turnOff in savedTurnOffs)
         {
             if (turnOff.on == false)

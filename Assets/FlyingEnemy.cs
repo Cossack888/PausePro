@@ -29,12 +29,12 @@ public class FlyingEnemy : EnemyAI
     {
         if (isStationary) return;
         transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
-        agent.destination = transform.position;
+        navMeshAgent.destination = transform.position;
         if (distanceToPlayer <= attackDistance)
         {
             if (distanceToPlayer < 0.3f)
             {
-                agent.Move(-transform.forward * Time.deltaTime);
+                navMeshAgent.Move(-transform.forward * Time.deltaTime);
             }
             else
             {
@@ -49,7 +49,7 @@ public class FlyingEnemy : EnemyAI
 
     protected override void HandleMovement()
     {
-        agent.destination = player.position;
+        navMeshAgent.destination = player.position;
     }
 
     protected override IEnumerator Throw()
