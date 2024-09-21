@@ -32,9 +32,9 @@ public class HeroWeapon : MonoBehaviour
             {
                 ContactPoint contact = collision.contacts[0];
                 Vector3 collisionPoint = contact.point;
-                if (playerController.CurrentMovement == playerController.GhostAttack)
+                if (playerController.CurrentMovement == playerController.GhostForm)
                 {
-                    collision.gameObject.GetComponent<Health>().TakeDamageFromBehind(40);
+                    collision.gameObject.GetComponent<Health>().TakeDamageFromBehind(100);
                 }
                 else
                 {

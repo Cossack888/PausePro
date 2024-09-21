@@ -11,6 +11,17 @@ public class TriggerDoors : MonoBehaviour
     private Animator triggerAnim;
     public GameObject doors;
     public bool open;
+    private PlayerAction actions;
+    private void OnEnable()
+    {
+        actions = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAction>();
+        actions.OnInteractGlobal += Interact;
+    }
+    private void OnDisable()
+    {
+        actions.OnInteractGlobal -= Interact;
+    }
+
     private void Start()
     {
         triggerAnim = GetComponent<Animator>();
@@ -22,6 +33,35 @@ public class TriggerDoors : MonoBehaviour
             inRange = true;
         }
     }
+
+    public void Interact()
+    {
+        if (inRange)
+        {
+            if (triggerAnim != null)
+            {
+                if (open == false)
+                {
+                    triggerAnim.SetTrigger("Open");
+                }
+                else if (open == true)
+                {
+                    triggerAnim.SetTrigger("Close");
+                }
+            }
+            if (anim && open == false)
+            {
+                anim.SetTrigger("Open");
+                open = true;
+            }
+            else if (anim && open == true)
+            {
+                anim.SetTrigger("Close");
+                open = false;
+            }
+        }
+    }
+
     private void Update()
     {
         if (inRange)
@@ -29,33 +69,6 @@ public class TriggerDoors : MonoBehaviour
             if (GetComponentInChildren<MeshRenderer>())
             {
                 GetComponentInChildren<MeshRenderer>().material.color = Color.red;
-            }
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                if (triggerAnim != null)
-                {
-                    if (open == false)
-                    {
-                        triggerAnim.SetTrigger("Open");
-                    }
-                    else if (open == true)
-                    {
-                        triggerAnim.SetTrigger("Close");
-                    }
-
-                }
-
-
-                if (anim && open == false)
-                {
-                    anim.SetTrigger("Open");
-                    open = true;
-                }
-                else if (anim && open == true)
-                {
-                    anim.SetTrigger("Close");
-                    open = false;
-                }
             }
         }
     }

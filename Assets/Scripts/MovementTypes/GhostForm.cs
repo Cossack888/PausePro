@@ -28,7 +28,8 @@ public class GhostForm : MovementType
     {
         action.OnParkourGlobal += InitializeDash;
         action.OnGhostGlobal += LeaveGhostForm;
-        action.OnAttackGlobal += Attack;
+        action.OnAttackGlobal += TransportObjectToPlayer;
+        action.OnShootGlobal += SaveForce;
         gameManager = GameObject.FindObjectOfType<GameManager>();
     }
 
@@ -44,13 +45,6 @@ public class GhostForm : MovementType
         playerController.NormalCam.gameObject.SetActive(false);
         playerController.SwitchCamera(playerController.GhostCam);
         AudioManager.instance.SwitchToAlbum("ghost");
-        foreach (Animator anim in GameObject.FindObjectsOfType<Animator>())
-        {
-            if (anim.gameObject.GetComponent<EnemyAI>() != null)
-            {
-                anim.SetBool("Stopped", true);
-            }
-        }
         foreach (EnemyAI enemy in GameObject.FindObjectsOfType<EnemyAI>())
         {
             enemy.isStationary = true;
@@ -88,22 +82,6 @@ public class GhostForm : MovementType
                 dashTimer = false;
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            SaveForce();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            ApplySavedForces();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            TransportObjectToPlayer();
-        }
-
     }
 
     private void InitializeDash()
@@ -113,7 +91,6 @@ public class GhostForm : MovementType
             dashTimer = true;
             timeElapsed = 0;
             playerRigidbody.AddForce(playerController.Cam.forward * playerController.DashForce * (1 + momentum.CurrentMomentum / 5));
-            momentum.ModifyMomentum(-0.1f);
         }
 
     }
@@ -125,18 +102,10 @@ public class GhostForm : MovementType
     {
         inGhostForm = false;
         playerRigidbody.useGravity = true;
-        foreach (Animator anim in GameObject.FindObjectsOfType<Animator>())
-        {
-            if (anim.gameObject.GetComponent<EnemyAI>() != null)
-            {
-                anim.SetBool("Stopped", false);
-                anim.SetBool("Back", false);
-            }
-        }
+
         foreach (EnemyAI enemy in GameObject.FindObjectsOfType<EnemyAI>())
         {
             enemy.UnpauseEnemy();
-            //enemy.ReenableNavMeshAgent();
         }
         redObjects.Clear();
         foreach (GameObject objects in greenObjects)
@@ -145,7 +114,6 @@ public class GhostForm : MovementType
             {
                 TurnColor(Color.white, objects);
             }
-
         }
         playerTransform.position = previousPosition;
         playerController.DestroyPlayerBody();
@@ -160,10 +128,11 @@ public class GhostForm : MovementType
         if (!inGhostForm)
         {
             return;
-        } 
+        }
 
         GameObject currentFocusedObject = FindObjectInFocusWithRaycast();
-        if (currentFocusedObject == null) {
+        if (currentFocusedObject == null)
+        {
             currentFocusedObject = FindObjectInFocusWithOverlapSphere();
         }
 
@@ -186,7 +155,7 @@ public class GhostForm : MovementType
         {
             if (ObjectProneToInteraction(hit.collider.gameObject))
             {
-                Debug.Log("Found with raycast: " + hit.collider.gameObject.name);        
+                Debug.Log("Found with raycast: " + hit.collider.gameObject.name);
                 return hit.collider.gameObject;
             }
             else
@@ -219,7 +188,7 @@ public class GhostForm : MovementType
                 nearestObject = hit.gameObject;
             }
         }
-        Debug.Log("Found with overlapSphere: " + nearestObject.name);        
+        Debug.Log("Found with overlapSphere: " + nearestObject.name);
         return nearestObject;
     }
 
@@ -341,7 +310,8 @@ public class GhostForm : MovementType
         }
     }
 
-    void ChangeColorOfObjectsProneToInteraction(Color color) {
+    void ChangeColorOfObjectsProneToInteraction(Color color)
+    {
         float sphereRadius = 10000.0f;
         LayerMask targetMask = Physics.AllLayers;
         Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, sphereRadius, targetMask);
@@ -359,7 +329,7 @@ public class GhostForm : MovementType
     {
         ChangeColorOfObjectsProneToInteraction(Color.green);
     }
-    
+
     void UnhighlightStuff()
     {
         ChangeColorOfObjectsProneToInteraction(Color.white);
@@ -403,6 +373,7 @@ public class GhostForm : MovementType
     {
         playerAction.OnParkourGlobal -= InitializeDash;
         playerAction.OnGhostGlobal -= LeaveGhostForm;
-        playerAction.OnAttackGlobal -= Attack;
+        playerAction.OnAttackGlobal -= TransportObjectToPlayer;
+        playerAction.OnShootGlobal -= SaveForce;
     }
 }

@@ -8,8 +8,8 @@ public class RegularMovement : MovementType
     public RegularMovement(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
         action.OnJumpGlobal += Jump;
-        action.OnDashGlobal += Dash;
         action.OnAttackGlobal += Attack;
+        action.OnInteractGlobal += Attack;
         action.OnGhostGlobal += Ghost;
     }
     public override void EnterMovement()
@@ -40,6 +40,19 @@ public class RegularMovement : MovementType
         playerRigidbody.velocity = targetVelocity;
     }
 
+    public void Push()
+    {
+        if (playerController.CurrentMovement == this)
+        {
+            ApplyForce();
+        }
+    }
+
+    public void ApplyForce()
+    {
+
+    }
+
     public void Jump()
     {
         if (IsGrounded() && playerController.CurrentMovement == this)
@@ -47,19 +60,10 @@ public class RegularMovement : MovementType
             playerController.SetMovement(playerController.Jumping);
         }
     }
-    public void Dash()
-    {
-        if (playerController.CurrentMovement == this)
-        {
-            playerController.SetMovement(playerController.Dash);
-        }
-    }
+
     public void Attack()
     {
-        if (playerController.CurrentMovement == this)
-        {
-            playerController.SetMovement(playerController.Attacking);
-        }
+        playerController.RightHand.SetTrigger("Slash");
     }
     public void Ghost()
     {
@@ -72,7 +76,6 @@ public class RegularMovement : MovementType
     ~RegularMovement()
     {
         playerAction.OnJumpGlobal -= Jump;
-        playerAction.OnDashGlobal -= Dash;
         playerAction.OnAttackGlobal -= Attack;
         playerAction.OnGhostGlobal -= Ghost;
     }
