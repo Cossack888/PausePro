@@ -18,7 +18,6 @@ public class CrouchJump : MovementType
     private bool landed;
     public CrouchJump(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
-        action.OnDashGlobal += Dash;
         controller.OnLand += Landed;
         capsuleCollider = controller.GetComponent<CapsuleCollider>();
         sphereCollider = controller.GetComponent<SphereCollider>();
@@ -97,15 +96,6 @@ public class CrouchJump : MovementType
             playerController.SetMovement(playerController.Crouching);
         }
     }
-
-    public void Dash()
-    {
-        if (playerController.CurrentMovement == this)
-        {
-            playerController.SetMovement(playerController.Dash);
-        }
-    }
-
     public override void FixedUpdateMovement()
     {
         Vector3 localMovement = new Vector3(movement.x, 0, movement.z);
@@ -140,8 +130,6 @@ public class CrouchJump : MovementType
 
     ~CrouchJump()
     {
-
-        playerAction.OnDashGlobal -= Dash;
         playerController.OnLand -= Landed;
     }
 }

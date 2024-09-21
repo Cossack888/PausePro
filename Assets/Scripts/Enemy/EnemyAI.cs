@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;  // This is optional but often used for collections like List<T>
 using Unity.VisualScripting;
@@ -7,12 +8,14 @@ using UnityEngine.AI;
 public abstract class EnemyAI : MonoBehaviour
 {
     public Transform player;
+    public Vector3 currentTarget;
+    public bool stopped;
     public Animator anim;
     [SerializeField] protected float throwDistance;
     [SerializeField] protected float throwSpeed;
     [SerializeField] protected float attackDistance;
     [SerializeField] protected float noticeDistance;
-    protected NavMeshAgent agent;
+    protected NavMeshAgent navMeshAgent;
     protected bool isThrowing = false;
     protected Coroutine throwCoroutine = null;
     [SerializeField] protected GameObject missile;
@@ -27,11 +30,27 @@ public abstract class EnemyAI : MonoBehaviour
     PlayerController playerController;
     public bool isStationary = false;
     [SerializeField] protected Collider col;
+    Rigidbody rigidBody;
+    InteractionObject interactionObject;
+
     protected virtual void Start()
     {
         anim = GetComponent<Animator>();
-        agent = GetComponent<NavMeshAgent>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        rigidBody = GetComponent<Rigidbody>();
+        interactionObject = GetComponent<InteractionObject>();
     }
+
+    // NavMeshAgent agent;
+    // EnemyAI enemyAI;
+    // Rigidbody rb;
+    // bool inMotion;
+    // private void Start()
+    // {
+    //     agent = GetComponent<NavMeshAgent>();
+    //     enemyAI = GetComponent<EnemyAI>();
+    //     rb = GetComponent<Rigidbody>();
+    // }
 
     private void OnEnable()
     {
@@ -46,7 +65,7 @@ public abstract class EnemyAI : MonoBehaviour
     {
         if (isStationary)
         {
-            agent.isStopped = true;
+            navMeshAgent.isStopped = true;
             col.enabled = false;
             return;
         }
@@ -54,26 +73,41 @@ public abstract class EnemyAI : MonoBehaviour
         distanceToPlayer = Vector3.Distance(player.position, transform.position);
         if (distanceToPlayer < noticeDistance)
         {
+            //FIXME:
             if (distanceToPlayer > throwDistance)
             {
-                HandleMovement();
+                //this should only happen if the enemy is an a surface
+                //and has navmeshagent enabled. Fix the conditions
+                if (navMeshAgent.enabled)
+                {
+                    HandleMovement();
+                }
             }
             else
             {
-                HandleCombat(distanceToPlayer);
+                if (navMeshAgent.enabled)
+                {
+                    HandleCombat(distanceToPlayer);
+                }
+
             }
         }
         else
         {
-            agent.isStopped = true;
+            /*
+            if(navMeshAgent.enabled) {
+                navMeshAgent.isStopped = true;
+            }*/
         }
 
+        //currentTarget=navMeshAgent.destination;
+        //stopped=navMeshAgent.isStopped;
     }
 
     public void UnpauseEnemy()
     {
         isStationary = false;
-        agent.isStopped = false;
+        navMeshAgent.isStopped = false;
         HandleMovement();
     }
 
@@ -101,10 +135,10 @@ public abstract class EnemyAI : MonoBehaviour
     }
     public void ReenableNavMeshAgent()
     {
-        if (!agent.enabled)
+        if (!navMeshAgent.enabled)
         {
-            agent.enabled = true;
-            agent.ResetPath();  // Clear the previous path
+            navMeshAgent.enabled = true;
+            navMeshAgent.ResetPath();  // Clear the previous path
             //agent.SetDestination(player.position);  // Set new destination to the player
         }
     }
@@ -133,4 +167,11 @@ public abstract class EnemyAI : MonoBehaviour
 
     protected abstract IEnumerator Throw();
     protected abstract IEnumerator Attack();
+
+    internal void ApplyForce(Vector3 forceDirection, Vector3 hitPoint)
+    {
+        navMeshAgent.enabled = false;
+        rigidBody.isKinematic = false;
+        interactionObject.ApplyForce(forceDirection, hitPoint);
+    }
 }

@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 485016}
   - component: {fileID: 8274270}
   - component: {fileID: 8228610}
-  - component: {fileID: 11462752}
-  - component: {fileID: 11450262}
   m_Layer: 8
   m_Name: Fireball
   m_TagString: Untagged
@@ -285,58 +283,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &11462752
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 121802}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b85cb039b6d149f46b051488d2465561, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Seed: 0
-  IntensityModifier: 2
-  IntensityMaxRange:
-    Minimum: 0
-    Maximum: 8
---- !u!114 &11450262
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 121802}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 245887334a601354cb1853676e37a7e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AudioSource: {fileID: 0}
-  StartTime: 0.25
-  StopTime: 1
-  Duration: 3
-  ForceAmount: 0
-  ForceRadius: 0
-  IsProjectile: 1
-  ManualParticleSystems:
-  - {fileID: 19899590}
-  ProjectileColliderObject: {fileID: 130866}
-  ProjectileCollisionSound: {fileID: 8274270}
-  ProjectileExplosionParticleSystem: {fileID: 19899590}
-  ProjectileExplosionRadius: 10
-  ProjectileExplosionForce: 2000
-  ProjectileColliderDelay: 0
-  ProjectileColliderSpeed: 25
-  ProjectileDirection: {x: 0, y: 0, z: 1}
-  ProjectileCollisionLayers:
-    serializedVersion: 2
-    m_Bits: 4294967039
-  ProjectileDestroyParticleSystemsOnCollision:
-  - {fileID: 19810394}
-  - {fileID: 19886674}
 --- !u!1 &130866
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,7 +295,6 @@ GameObject:
   - component: {fileID: 13546184}
   - component: {fileID: 5453920}
   - component: {fileID: 10860366}
-  - component: {fileID: 11437010}
   m_Layer: 8
   m_Name: FireballCollider
   m_TagString: Untagged
@@ -482,18 +427,6 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &11437010
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 130866}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e03644fdf51cfd34f8fdc92879c31a14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &132348
 GameObject:
   m_ObjectHideFlags: 0
@@ -797,7 +730,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -850,7 +783,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -903,7 +836,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationX:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -956,7 +889,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -5592,7 +5525,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 1
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -5645,7 +5578,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 1
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -5698,7 +5631,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationX:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -5751,7 +5684,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -10239,7 +10172,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -10292,7 +10225,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -10345,7 +10278,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationX:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:
@@ -10398,7 +10331,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startRotationY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0
       minScalar: 0
       maxCurve:

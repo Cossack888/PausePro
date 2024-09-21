@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TurnOff : MonoBehaviour
+public class TurnOff : MonoBehaviour, IProneToInteraction
 {
     HingeJoint joint;
     public bool on = true;

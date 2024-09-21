@@ -14757,8 +14757,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 458676}
-  - component: {fileID: 11426332}
-  - component: {fileID: 11437672}
   m_Layer: 8
   m_Name: SmallFires
   m_TagString: Untagged
@@ -14786,40 +14784,3 @@ Transform:
   - {fileID: 437396}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &11426332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 198690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b986ebeafa7e224e810d950d54baf03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AudioSource: {fileID: 8233310}
-  StartTime: 3
-  StopTime: 5
-  Duration: 1e+9
-  ForceAmount: 0
-  ForceRadius: 0
-  IsProjectile: 0
-  ManualParticleSystems: []
---- !u!114 &11437672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 198690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b85cb039b6d149f46b051488d2465561, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Seed: 100
-  IntensityModifier: 2
-  IntensityMaxRange:
-    Minimum: 0
-    Maximum: 8

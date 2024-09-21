@@ -1,6 +1,7 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class RegularMovement : MovementType
 {
@@ -8,8 +9,8 @@ public class RegularMovement : MovementType
     public RegularMovement(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
         action.OnJumpGlobal += Jump;
-        action.OnDashGlobal += Dash;
         action.OnAttackGlobal += Attack;
+        action.OnInteractGlobal += Attack;
         action.OnGhostGlobal += Ghost;
     }
     public override void EnterMovement()
@@ -40,6 +41,44 @@ public class RegularMovement : MovementType
         playerRigidbody.velocity = targetVelocity;
     }
 
+    public void Push()
+    {
+        if (playerController.CurrentMovement == this)
+        {
+            ApplyForce();
+        }
+    }
+
+    public void ApplyForce()
+    {
+        Vector3 start = playerTransform.position;
+        Vector3 direction = playerController.Cam.transform.forward;
+
+        if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
+        {
+            InteractionObject hitObject = hit.collider.gameObject.GetComponent<InteractionObject>();
+            if (hitObject != null && !hitObject.hasBeenPushed)
+            {
+                NavMeshAgent navMeshAgent = hit.collider.GetComponent<NavMeshAgent>();
+                EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
+                Rigidbody rb = hitObject.GetComponent<Rigidbody>();
+                rb.isKinematic = false;
+                if (navMeshAgent != null)
+                {
+                    navMeshAgent.enabled = false;
+                }
+                if (enemy != null)
+                {
+                    enemy.enabled = false;
+                }
+                Vector3 forceDirection = (hit.point - start).normalized;
+                rb.AddForceAtPosition(forceDirection * 10, hit.point, ForceMode.Impulse);
+
+                hitObject.Push();
+            }
+        }
+    }
+
     public void Jump()
     {
         if (IsGrounded() && playerController.CurrentMovement == this)
@@ -47,19 +86,10 @@ public class RegularMovement : MovementType
             playerController.SetMovement(playerController.Jumping);
         }
     }
-    public void Dash()
-    {
-        if (playerController.CurrentMovement == this)
-        {
-            playerController.SetMovement(playerController.Dash);
-        }
-    }
+
     public void Attack()
     {
-        if (playerController.CurrentMovement == this)
-        {
-            playerController.SetMovement(playerController.Attacking);
-        }
+        playerController.RightHand.SetTrigger("Slash");
     }
     public void Ghost()
     {
@@ -72,7 +102,6 @@ public class RegularMovement : MovementType
     ~RegularMovement()
     {
         playerAction.OnJumpGlobal -= Jump;
-        playerAction.OnDashGlobal -= Dash;
         playerAction.OnAttackGlobal -= Attack;
         playerAction.OnGhostGlobal -= Ghost;
     }

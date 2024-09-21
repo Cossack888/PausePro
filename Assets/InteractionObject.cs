@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class InteractionObject : MonoBehaviour
+public class InteractionObject : MonoBehaviour, IProneToInteraction
 {
     public bool hasBeenPushed;
     public bool hasBeenMarked;
@@ -25,6 +25,8 @@ public class InteractionObject : MonoBehaviour
             ResetBeingPushed();
         }
     }
+
+    //FIXME: change name
     public void Push()
     {
         hasBeenPushed = true;
@@ -38,8 +40,15 @@ public class InteractionObject : MonoBehaviour
         }
 
         Invoke("CheckForMotion", 0.5f);
-        Invoke("ResetBeingPushed", 5);
+        //Invoke("ResetBeingPushed", 5);
     }
+
+    public void ApplyForce(Vector3 forceDirection, Vector3 hitPoint)
+    {
+        rb.AddForceAtPosition(forceDirection * 30, hitPoint, ForceMode.Impulse);
+        Push();
+    }
+
     public void CheckForMotion()
     {
         inMotion = true;
@@ -59,6 +68,10 @@ public class InteractionObject : MonoBehaviour
                 enemyAI.enabled = true;
                 enemyAI.ReenableNavMeshAgent();
             }
+
+        }
+        else
+        {
             rb.isKinematic = true;
         }
 

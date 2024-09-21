@@ -62,12 +62,9 @@ public class PlayerController : MonoBehaviour
     private Jumping jumping;
     private Somersault somersault;
     private WallRun wallRun;
-    private Dash dash;
     private Crouching crouching;
     private CrouchJump crouchJump;
-    private Attacking attacking;
     private GhostForm ghostForm;
-    private GhostAttack ghostAttack;
     private float cameraPitch;
     public bool smoothingEnabled = true;
     private Transform cam;
@@ -94,11 +91,9 @@ public class PlayerController : MonoBehaviour
     public Jumping Jumping => jumping;
     public Somersault Somersault => somersault;
     public WallRun WallRun => wallRun;
-    public Dash Dash => dash;
     public Crouching Crouching => crouching;
     public CrouchJump CrouchJump => crouchJump;
-    public Attacking Attacking => attacking;
-    public GhostAttack GhostAttack => ghostAttack;
+
     public Transform Cam => cam;
     public Camera NormalCam => normalCam;
     public Camera GhostCam => ghostCam;
@@ -125,12 +120,9 @@ public class PlayerController : MonoBehaviour
         jumping = new Jumping(rb, transform, this, action);
         somersault = new Somersault(rb, transform, this, action);
         wallRun = new WallRun(rb, transform, this, action);
-        dash = new Dash(rb, transform, this, action);
         crouching = new Crouching(rb, transform, this, action);
         crouchJump = new CrouchJump(rb, transform, this, action);
-        attacking = new Attacking(rb, transform, this, action);
         ghostForm = new GhostForm(rb, transform, this, action);
-        ghostAttack = new GhostAttack(rb, transform, this, action);
         SetMovement(regularMovement);
         SetMouseSensitivity();
     }

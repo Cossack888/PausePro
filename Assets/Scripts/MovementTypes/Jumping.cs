@@ -6,7 +6,6 @@ public class Jumping : MovementType
     {
         //action.OnParkourGlobal += Somersault;
         action.OnJumpGlobal += WallRunOrDoubleJump;
-        action.OnDashGlobal += Dash;
         controller.OnLand += Landed;
     }
     private float initialYPosition;
@@ -24,7 +23,6 @@ public class Jumping : MovementType
         isAscending = true;
         isAtPeak = false;
         landed = true;
-        momentum.ModifyMomentum(-0.1f);
     }
     public override void UpdateMovement()
     {
@@ -69,13 +67,6 @@ public class Jumping : MovementType
     {
         playerController.SetMovement(playerController.WallRun);
     }
-    public void Dash()
-    {
-        if (playerController.CurrentMovement == this)
-        {
-            playerController.SetMovement(playerController.Dash);
-        }
-    }
 
     public override void FixedUpdateMovement()
     {
@@ -117,19 +108,10 @@ public class Jumping : MovementType
         }
     }
 
-    /* void Somersault()
-     {
-         if (playerController.CurrentMovement == this && !Falling())
-         {
-             playerController.SetMovement(playerController.Somersault);
-         }
-     }*/
-
     ~Jumping()
     {
         //playerAction.OnParkourGlobal -= Somersault;
         playerAction.OnJumpGlobal -= WallRunOrDoubleJump;
-        playerAction.OnDashGlobal -= Dash;
         playerController.OnLand -= Landed;
     }
 }
