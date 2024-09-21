@@ -117,7 +117,7 @@ public class GhostForm : MovementType
         }
         playerTransform.position = previousPosition;
         playerController.DestroyPlayerBody();
-        ApplySavedForces();
+        ApplyGhostActions();
         AudioManager.instance.SwitchToAlbum("flesh");
 
         UnhighlightStuff();
@@ -130,11 +130,7 @@ public class GhostForm : MovementType
             return;
         }
 
-        GameObject currentFocusedObject = FindObjectInFocusWithRaycast();
-        if (currentFocusedObject == null)
-        {
-            currentFocusedObject = FindObjectInFocusWithOverlapSphere();
-        }
+        GameObject currentFocusedObject = FindObjectInFocus();
 
         if (highlightedObject != null && highlightedObject != currentFocusedObject)
         {
@@ -147,6 +143,17 @@ public class GhostForm : MovementType
         }
 
         highlightedObject = currentFocusedObject;
+    }
+    GameObject FindObjectInFocus()
+    {
+        GameObject currentFocusedObject = FindObjectInFocusWithRaycast();
+        if (currentFocusedObject != null) {
+            return currentFocusedObject;
+        }
+        else
+        {
+            return FindObjectInFocusWithOverlapSphere();
+        }    
     }
 
     GameObject FindObjectInFocusWithRaycast()
@@ -192,53 +199,24 @@ public class GhostForm : MovementType
         return nearestObject;
     }
 
-    public void ApplyForce()
-    {
-        Vector3 start = playerTransform.position;
-        Vector3 direction = playerController.Cam.transform.forward;
-        Debug.DrawRay(start, direction * playerController.GhostInteractionDistance, Color.red);
-
-        if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
-        {
-            Debug.DrawLine(start, hit.point, Color.green);
-            InteractionObject hitObject = hit.collider.gameObject.GetComponent<InteractionObject>();
-            if (hitObject != null && !hitObject.hasBeenPushed)
-            {
-                NavMeshAgent navMeshAgent = hit.collider.GetComponent<NavMeshAgent>();
-                EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
-                Rigidbody rb = hitObject.GetComponent<Rigidbody>();
-                rb.isKinematic = false;
-                if (navMeshAgent != null)
-                {
-                    navMeshAgent.enabled = false;
-                }
-                if (enemy != null)
-                {
-                    enemy.enabled = false;
-                }
-                Vector3 forceDirection = (hit.point - start).normalized;
-                rb.AddForceAtPosition(forceDirection * 10, hit.point, ForceMode.Impulse);
-
-                hitObject.Push();
-            }
-        }
-    }
-
     public void SaveForce()
     {
-        Vector3 start = playerTransform.position;
+        Vector3 start = playerController.Cam.transform.position;
         Vector3 direction = playerController.Cam.transform.forward;
         Debug.DrawRay(start, direction * playerController.GhostInteractionDistance, Color.red);
 
-        if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
+        GameObject objectInFocus = FindObjectInFocus();
+        //if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
+        if( objectInFocus != null)
         {
-            TurnOff turnOff = hit.collider.GetComponent<TurnOff>();
-            InteractionObject hitObject = hit.collider.gameObject.GetComponent<InteractionObject>();
-            BreakableObject breakable = hit.collider.GetComponent<BreakableObject>();
-            GameObject hitData = hit.collider.gameObject;
+            TurnOff turnOff = objectInFocus.GetComponent<TurnOff>();
+            InteractionObject hitObject = objectInFocus.gameObject.GetComponent<InteractionObject>();
+            BreakableObject breakable = objectInFocus.GetComponent<BreakableObject>();
+            //FIXME
+            //GameObject hitData = objectInFocus;
 
-            TurnColor(Color.red, hitData);
-            redObjects.Add(hitData);
+            TurnColor(Color.red, objectInFocus);
+            redObjects.Add(objectInFocus);
             if (breakable != null)
             {
                 breakable.RiggExplosion();
@@ -255,17 +233,18 @@ public class GhostForm : MovementType
             if (hitObject != null && !hitObject.hasBeenPushed)
             {
 
-                NavMeshAgent navMeshAgent = hit.collider.GetComponent<NavMeshAgent>();
-                EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
+                NavMeshAgent navMeshAgent = objectInFocus.GetComponent<NavMeshAgent>();
+                EnemyAI enemy = objectInFocus.GetComponent<EnemyAI>();
                 Rigidbody rb = hitObject.GetComponent<Rigidbody>();
-                Vector3 forceDirection = (hit.point - start).normalized;
-                savedForces.Add(new ForceData(rb, hitObject, forceDirection, hit.point, navMeshAgent, enemy));
+                //Vector3 forceDirection = (hit.point - start).normalized;
+                Vector3 forceDirection = (objectInFocus.transform.position - start).normalized;
+                savedForces.Add(new ForceData(rb, hitObject, forceDirection, objectInFocus.transform.position, navMeshAgent, enemy));
                 Debug.Log("Forces:    " + savedForces.Count);
             }
         }
     }
 
-    public void ApplySavedForces()
+    public void ApplyGhostActions()
     {
         while (time < 1)
         {
@@ -344,13 +323,19 @@ public class GhostForm : MovementType
     }
 
 
-
     public bool ObjectProneToInteraction(GameObject gameObject)
     {
-        if (gameObject.GetComponent<BreakableObject>() != null || gameObject.GetComponent<InteractionObject>() != null || gameObject.GetComponent<TurnOff>() != null)
+        if (gameObject.GetComponent<BreakableObject>() != null || 
+            gameObject.GetComponent<InteractionObject>() != null ||
+            gameObject.GetComponent<TurnOff>() != null ||
+            gameObject.GetComponent<Glyph>() != null
+            )
             return true;
         else return false;
+
+        //return gameObject.GetComponent<IProneToInteraction>() != null;
     }
+
     public void TurnColor(Color color, GameObject hitData)
     {
         if (!redObjects.Contains(hitData))
