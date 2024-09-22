@@ -30,6 +30,7 @@ public class RegularMovement : MovementType
 
     public override void ExitMovement()
     {
+
         playerAction.OnJumpGlobal -= Jump;
         //playerAction.OnAttackGlobal -= Attack;
         //playerAction.OnInteractGlobal -= Push;
@@ -76,32 +77,8 @@ public class RegularMovement : MovementType
 
         if (enemy != null)
         {
-<<<<<<< HEAD
-            InteractionObject hitObject = hit.collider.gameObject.GetComponent<InteractionObject>();
-            if (hitObject != null && !hitObject.hasBeenPushed)
-            {
-                NavMeshAgent navMeshAgent = hit.collider.GetComponent<NavMeshAgent>();
-                EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
-                Rigidbody rb = hitObject.GetComponent<Rigidbody>();
-                playerController.LeftHand.SetTrigger("push");
-                rb.isKinematic = false;
-                if (navMeshAgent != null)
-                {
-                    navMeshAgent.enabled = false;
-                }
-                if (enemy != null)
-                {
-                    enemy.enabled = false;
-                }
-                Vector3 forceDirection = (hit.point - start).normalized;
-                rb.AddForceAtPosition(forceDirection * 10, hit.point, ForceMode.Impulse);
-
-                hitObject.Push();
-            }
-=======
             Vector3 directionToTarget = enemy.transform.position - playerController.NormalCam.transform.position;
             enemy.ApplyForce(directionToTarget, enemy.transform.position);
->>>>>>> 1a1e0ed (Use loose aim in regular form)
         }
 
         // Vector3 start = playerTransform.position;
