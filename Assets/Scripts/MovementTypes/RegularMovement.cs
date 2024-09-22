@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.ConstrainedExecution;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -6,22 +7,26 @@ using UnityEngine.AI;
 public class RegularMovement : MovementType
 {
 
+    private int forceMuliplier = 20;
+
     private FocusedObjectFinder focusedObjectFinder;
 
     public RegularMovement(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
-        // action.OnJumpGlobal += Jump;
-        // //action.OnAttackGlobal += Attack;
-        // action.OnInteractGlobal += Push;
-        // action.OnGhostGlobal += Ghost;
+        action.OnJumpGlobal += Jump;
+        // // //action.OnAttackGlobal += Attack;
+        action.OnInteractGlobal += Push;
+        action.OnShootGlobal += Push;
+        action.OnGhostGlobal += Ghost;
 
         focusedObjectFinder= new FocusedObjectFinder(controller, transform);
     }
     public override void EnterMovement()
     {
+        Debug.Log("Entered Regular Form");
         playerAction.OnJumpGlobal += Jump;
         //playerAction.OnAttackGlobal += Attack;
-        //playerAction.OnInteractGlobal += Push;
+        playerAction.OnInteractGlobal += Push;
         playerAction.OnShootGlobal += Push;
         playerAction.OnGhostGlobal += Ghost;
 
@@ -33,7 +38,7 @@ public class RegularMovement : MovementType
 
         playerAction.OnJumpGlobal -= Jump;
         //playerAction.OnAttackGlobal -= Attack;
-        //playerAction.OnInteractGlobal -= Push;
+        playerAction.OnInteractGlobal -= Push;
         playerAction.OnShootGlobal -= Push;
         playerAction.OnGhostGlobal -= Ghost;
     }
@@ -62,23 +67,25 @@ public class RegularMovement : MovementType
 
     public void Push()
     {
-        if (playerController.CurrentMovement == this)
-        {
-            ApplyForce();
-        }
+        ApplyForce();
+        // if (playerController.CurrentMovement == this)
+        // {
+        //     ApplyForce();
+        // }
     }
 
     public void ApplyForce()
     {
+        Debug.Log("Applying Force");
         
-        GameObject objectInFocus = focusedObjectFinder.FindObjectInFocus();
+        GameObject objectInFocus = focusedObjectFinder.FindEnemyInFocusObjectInFocus();
 
-        EnemyAI enemy = objectInFocus.GetComponent<EnemyAI>();
-
-        if (enemy != null)
+        if (objectInFocus != null)
         {
+            EnemyAI enemy = objectInFocus.GetComponent<EnemyAI>();
+            Debug.Log("enemy in focus: " + objectInFocus.name);
             Vector3 directionToTarget = enemy.transform.position - playerController.NormalCam.transform.position;
-            enemy.ApplyForce(directionToTarget, enemy.transform.position);
+            enemy.ApplyForce(directionToTarget.normalized, enemy.transform.position, forceMuliplier);
         }
 
         // Vector3 start = playerTransform.position;
@@ -133,7 +140,7 @@ public class RegularMovement : MovementType
     {
         playerAction.OnJumpGlobal -= Jump;
         //playerAction.OnAttackGlobal -= Attack;
-        //playerAction.OnInteractGlobal -= Push;
+        playerAction.OnInteractGlobal -= Push;
         playerAction.OnShootGlobal -= Push;
         playerAction.OnGhostGlobal -= Ghost;
     }

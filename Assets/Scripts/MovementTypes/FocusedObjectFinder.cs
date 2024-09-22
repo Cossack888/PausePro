@@ -14,6 +14,16 @@ public class FocusedObjectFinder
         this.playerTransform = playerTransform;
     }
 
+    public GameObject FindEnemyInFocusObjectInFocus()
+    {
+        GameObject objectInFocus = FindObjectInFocusWithRaycast();
+        if (objectInFocus == null || objectInFocus.GetComponent<EnemyAI>() == null)
+        {
+            objectInFocus = FindObjectInFocusWithOverlapSphere(true);
+        }
+        return objectInFocus;
+    }
+
     public GameObject FindObjectInFocus()
     {
         GameObject objectInFocus = FindObjectInFocusWithRaycast();
@@ -41,7 +51,7 @@ public class FocusedObjectFinder
         return null;
     }
 
-    GameObject FindObjectInFocusWithOverlapSphere()
+    GameObject FindObjectInFocusWithOverlapSphere(bool onlyEnemies = false)
     {
         float sphereRadius = 10000.0f;
         LayerMask targetMask = Physics.AllLayers;
@@ -64,6 +74,10 @@ public class FocusedObjectFinder
                 if (Physics.Raycast(playerController.Cam.position, directionToObject, out RaycastHit raycastHit, Mathf.Infinity, Physics.AllLayers))
                 {
                     if (raycastHit.collider.gameObject != hit.gameObject)
+                    {
+                        continue;
+                    }
+                    if (onlyEnemies && hit.gameObject.GetComponent<EnemyAI>() == null)
                     {
                         continue;
                     }

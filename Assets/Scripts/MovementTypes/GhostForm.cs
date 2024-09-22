@@ -37,6 +37,7 @@ public class GhostForm : MovementType
 
     public override void EnterMovement()
     {
+        Debug.Log("Entered Ghost Form");
         playerAction.OnParkourGlobal += InitializeDash;
         playerAction.OnGhostGlobal += LeaveGhostForm;
         playerAction.OnInteractGlobal += TransportObjectToPlayer;

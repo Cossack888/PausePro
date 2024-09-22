@@ -14,7 +14,7 @@ public class HeavyObject : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.name);
+        //Debug.Log(collision.gameObject.name);
         if ((interactionObject.inMotion || rb.velocity.magnitude > 2f) && collision.gameObject.CompareTag("Enemy"))
         {
             collision.gameObject.GetComponentInParent<Health>().TakeDamage(200);

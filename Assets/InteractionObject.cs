@@ -43,9 +43,9 @@ public class InteractionObject : MonoBehaviour, IProneToInteraction
         //Invoke("ResetBeingPushed", 5);
     }
 
-    public void ApplyForce(Vector3 forceDirection, Vector3 hitPoint)
+    public void ApplyForce(Vector3 forceDirection, Vector3 hitPoint, int forceMultiplier = 30)
     {
-        rb.AddForceAtPosition(forceDirection * 30, hitPoint, ForceMode.Impulse);
+        rb.AddForceAtPosition(forceDirection * forceMultiplier, hitPoint, ForceMode.Impulse);
         Push();
     }
 

@@ -86,11 +86,11 @@ public abstract class EnemyAI : MonoBehaviour
     protected abstract void HandleMovement();
     protected abstract void HandleCombat(float distanceToPlayer);
     protected abstract IEnumerator Attack();
-    internal void ApplyForce(Vector3 forceDirection, Vector3 hitPoint)
+    internal void ApplyForce(Vector3 forceDirection, Vector3 hitPoint, int forceMuliplier = 30)
     {
         navMeshAgent.enabled = false;
         rigidBody.isKinematic = false;
-        interactionObject.ApplyForce(forceDirection, hitPoint);
+        interactionObject.ApplyForce(forceDirection, hitPoint, forceMuliplier);
     }
     public void ReenableNavMeshAgent()
     {
