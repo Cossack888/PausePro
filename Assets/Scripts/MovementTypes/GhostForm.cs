@@ -28,7 +28,7 @@ public class GhostForm : MovementType
     {
         action.OnParkourGlobal += InitializeDash;
         action.OnGhostGlobal += LeaveGhostForm;
-        action.OnAttackGlobal += TransportObjectToPlayer;
+        action.OnInteractGlobal += TransportObjectToPlayer;
         action.OnShootGlobal += SaveForce;
         gameManager = GameObject.FindObjectOfType<GameManager>();
     }
@@ -130,11 +130,7 @@ public class GhostForm : MovementType
             return;
         }
 
-        GameObject currentFocusedObject = FindObjectInFocusWithRaycast();
-        if (currentFocusedObject == null)
-        {
-            currentFocusedObject = FindObjectInFocusWithOverlapSphere();
-        }
+        GameObject currentFocusedObject = FindObjectInFocus();
 
         if (highlightedObject != null && highlightedObject != currentFocusedObject)
         {
@@ -149,12 +145,23 @@ public class GhostForm : MovementType
         highlightedObject = currentFocusedObject;
     }
 
+    GameObject FindObjectInFocus()
+    {
+        GameObject objectInFocus = FindObjectInFocusWithRaycast();
+        if (objectInFocus == null)
+        {
+            objectInFocus = FindObjectInFocusWithOverlapSphere();
+        }
+        return objectInFocus;
+    }
+
     GameObject FindObjectInFocusWithRaycast()
     {
         if (Physics.Raycast(playerController.Cam.position, playerController.Cam.forward, out RaycastHit hit, Mathf.Infinity, playerController.GhostInteractionLayer))
         {
             if (ObjectProneToInteraction(hit.collider.gameObject))
             {
+                //Debug.Log("Found object with raycast:" + hit.collider.gameObject.name);
                 return hit.collider.gameObject;
             }
             else
@@ -183,10 +190,22 @@ public class GhostForm : MovementType
 
             if (angle < lowestAngle && ObjectProneToInteraction(hit.gameObject))
             {
-                lowestAngle = angle;
-                nearestObject = hit.gameObject;
+                //check line of sight - OverlapSphere goes through walls
+                //use AllLayers - the Raycast might go throught walls otherwise (?)
+                if (Physics.Raycast(playerController.Cam.position, directionToObject, out RaycastHit raycastHit, Mathf.Infinity, Physics.AllLayers))
+                {
+                    if (raycastHit.collider.gameObject != hit.gameObject)
+                    {
+                        continue;
+                    }
+                    lowestAngle = angle;
+                    nearestObject = hit.gameObject;
+                }
             }
         }
+        // if(nearestObject!= null) {
+        //     Debug.Log("Found object with overlap sphere:" + nearestObject.name);
+        // }
         return nearestObject;
     }
 
@@ -194,19 +213,21 @@ public class GhostForm : MovementType
 
     public void SaveForce()
     {
-        Vector3 start = playerTransform.position;
+        Debug.Log("Saving force");
+        Vector3 start = playerController.Cam.transform.position;
         Vector3 direction = playerController.Cam.transform.forward;
         Debug.DrawRay(start, direction * playerController.GhostInteractionDistance, Color.red);
 
-        if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
+        GameObject objectInFocus = FindObjectInFocus();
+        //if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
+        if( objectInFocus != null)
         {
-            TurnOff turnOff = hit.collider.GetComponent<TurnOff>();
-            InteractionObject hitObject = hit.collider.gameObject.GetComponent<InteractionObject>();
-            BreakableObject breakable = hit.collider.GetComponent<BreakableObject>();
-            GameObject hitData = hit.collider.gameObject;
+            TurnOff turnOff = objectInFocus.GetComponent<TurnOff>();
+            InteractionObject hitObject = objectInFocus.gameObject.GetComponent<InteractionObject>();
+            BreakableObject breakable = objectInFocus.GetComponent<BreakableObject>();
 
-            TurnColor(Color.red, hitData);
-            redObjects.Add(hitData);
+            TurnColor(Color.red, objectInFocus);
+            redObjects.Add(objectInFocus);
             if (breakable != null)
             {
                 breakable.RiggExplosion();
@@ -223,11 +244,12 @@ public class GhostForm : MovementType
             if (hitObject != null && !hitObject.hasBeenPushed)
             {
 
-                NavMeshAgent navMeshAgent = hit.collider.GetComponent<NavMeshAgent>();
-                EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
+                NavMeshAgent navMeshAgent = objectInFocus.GetComponent<NavMeshAgent>();
+                EnemyAI enemy = objectInFocus.GetComponent<EnemyAI>();
                 Rigidbody rb = hitObject.GetComponent<Rigidbody>();
-                Vector3 forceDirection = (hit.point - start).normalized;
-                savedForces.Add(new ForceData(rb, hitObject, forceDirection, hit.point, navMeshAgent, enemy));
+                //Vector3 forceDirection = (hit.point - start).normalized;
+                Vector3 forceDirection = (objectInFocus.transform.position - start).normalized;
+                savedForces.Add(new ForceData(rb, hitObject, forceDirection, objectInFocus.transform.position, navMeshAgent, enemy));
                 Debug.Log("Forces:    " + savedForces.Count);
             }
         }
@@ -344,7 +366,7 @@ public class GhostForm : MovementType
     {
         playerAction.OnParkourGlobal -= InitializeDash;
         playerAction.OnGhostGlobal -= LeaveGhostForm;
-        playerAction.OnAttackGlobal -= TransportObjectToPlayer;
+        playerAction.OnInteractGlobal -= TransportObjectToPlayer;
         playerAction.OnShootGlobal -= SaveForce;
     }
 }
