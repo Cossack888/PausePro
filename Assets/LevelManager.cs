@@ -8,6 +8,7 @@ public class LevelManager : MonoBehaviour
 
     public void ChangeScene(int sceneBuildIndex)
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(sceneBuildIndex);
     }
 }

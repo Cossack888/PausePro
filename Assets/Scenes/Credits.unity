@@ -270,7 +270,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1444210411}
   - component: {fileID: 1444210410}
-  - component: {fileID: 1444210409}
+  - component: {fileID: 1444210412}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -278,26 +278,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1444210409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1444210408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
 --- !u!114 &1444210410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,6 +308,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1444210412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1444210408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!1 &1552559609
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,18 +656,25 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game development is a complex, creative process that involves designing,
-    coding, and refining interactive experiences for players. It starts with an idea
-    or concept, which is expanded into a detailed plan that includes gameplay mechanics,
-    storylines, characters, and visual style. Developers then build the game using
-    programming languages, engines like Unity or Unreal, and various design tools
-    for art, animation, sound, and physics. Playtesting is crucial, revealing bugs
-    and opportunities for improvement. Successful games require balancing creativity
-    with technical proficiency, teamwork, and problem-solving. The process is iterative,
-    with constant revisions to ensure the game is both fun and functional.
+  m_text: "Creators - team WAAAGH & LOVE:\r\nPatryk Lutrzykowski - art & animation\r\nMicha\u0142
+    Rogalski - programming, game design\r\nJonasz Gawron - programming, game design\r\nJan
+    Wi\u015Bniowolski (https://jesykh.itch.io/) - level design, product\r\n\r\nMusic\r\n\r\nMain
+    soundtrack - \u2018Warp Ritual\u2019 by Psychic Hood (https://psychichood.bandcamp.com/),
+    courtesy of the author <3\r\nGhost-mode soundtrack - Cinematic Chanting / Throat
+    Singing Percussion Trailer.wav by GregorQuendel -- https://freesound.org/s/514509/
+    -- License: Attribution NonCommercial 4.0\r\n\r\nAssets\r\nhttps://assetstore.unity.com/packages/3d/characters/stylized-simple-hands-221297\r\nhttps://assetstore.unity.com/packages/vfx/particles/blood-gush-73426\r\nhttps://assetstore.unity.com/packages/3d/props/weapons/low-poly-melee-ranged-medieval-weapons-208981\r\nhttps://assetstore.unity.com/packages/vfx/particles/fire-explosions/fire-spell-effects-36825\r\nhttps://assetstore.unity.com/packages/vfx/shaders/free-lava-shader-292492\r\nhttps://assetstore.unity.com/packages/vfx/shaders/ultimate-10-shaders-168611\r\n\r\n\r\n
+    Game development is a complex, creative process that involves designing, coding,
+    and refining interactive experiences for players. It starts with an idea or concept,
+    which is expanded into a detailed plan that includes gameplay mechanics, storylines,
+    characters, and visual style. Developers then build the game using programming
+    languages, engines like Unity or Unreal, and various design tools for art, animation,
+    sound, and physics. Playtesting is crucial, revealing bugs and opportunities
+    for improvement. Successful games require balancing creativity with technical
+    proficiency, teamwork, and problem-solving. The process is iterative, with constant
+    revisions to ensure the game is both fun and functional."
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 61ecbe56c412e6b42afea37d91512288, type: 2}
-  m_sharedMaterial: {fileID: 4490775397282145839, guid: 61ecbe56c412e6b42afea37d91512288, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

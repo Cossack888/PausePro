@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     private PlayerAction action;
     private PlayerHealth health;
     public GameObject menu;
+    public GameObject controls;
     public TMP_Text bottlesText;
 
     bool menuActive;
@@ -33,6 +34,16 @@ public class GameManager : MonoBehaviour
         return bottles;
     }
 
+    public void Controls(bool state)
+    {
+        controls.SetActive(state);
+    }
+
+    public void ToggleControlsMenu()
+    {
+        bool isActive = controls.activeSelf;
+        Controls(!isActive);
+    }
     public void ResetScene()
     {
         Time.timeScale = 1f;
@@ -52,6 +63,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
+                Controls(false);
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
                 Time.timeScale = 1f;
