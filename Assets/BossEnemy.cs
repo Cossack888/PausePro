@@ -52,11 +52,11 @@ public class BossEnemy : EnemyAI
     {
         if (isStationary) { return; }
         if (!inRange) { return; }
-        GameObject projectile = Instantiate(spellProjectile, transform.position + Vector3.up, Quaternion.identity);
+        GameObject projectile = Instantiate(spellProjectile, transform.position + Vector3.up * 4, Quaternion.identity);
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            Vector3 direction = (player.position - transform.position + Vector3.up).normalized;
+            Vector3 direction = (player.position - transform.position + Vector3.up * 4).normalized;
             rb.AddForce(direction * projectileSpeed, ForceMode.Impulse);
         }
     }
@@ -104,7 +104,7 @@ public class BossEnemy : EnemyAI
 
     public void Targeting()
     {
-        Vector3 origin = transform.position + Vector3.up;
+        Vector3 origin = transform.position + Vector3.up * 4;
         inRange = !Physics.Raycast(origin, player.transform.position - origin, out RaycastHit hit, Vector3.Distance(origin, player.transform.position), walls);
         if (inRange)
         {

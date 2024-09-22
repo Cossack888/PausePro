@@ -10,7 +10,7 @@ public class RegularMovement : MovementType
     {
         action.OnJumpGlobal += Jump;
         action.OnAttackGlobal += Attack;
-        action.OnInteractGlobal += Attack;
+        action.OnInteractGlobal += Push;
         action.OnGhostGlobal += Ghost;
     }
     public override void EnterMovement()
@@ -101,6 +101,7 @@ public class RegularMovement : MovementType
     {
         playerAction.OnJumpGlobal -= Jump;
         playerAction.OnAttackGlobal -= Attack;
+        playerAction.OnInteractGlobal -= Push;
         playerAction.OnGhostGlobal -= Ghost;
     }
 }
