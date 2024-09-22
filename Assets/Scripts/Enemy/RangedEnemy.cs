@@ -23,7 +23,6 @@ public class RangedEnemy : EnemyAI
                 fireTimer = 0f;
                 anim.SetTrigger("Attack");
                 yield return new WaitForSeconds(1f);
-
                 FireProjectile();
             }
 
@@ -36,6 +35,7 @@ public class RangedEnemy : EnemyAI
 
     protected void FireProjectile()
     {
+        if (isStationary) { return; }
         GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         if (rb != null)
@@ -55,6 +55,7 @@ public class RangedEnemy : EnemyAI
 
     protected override void HandleCombat(float distanceToPlayer)
     {
+        if (isStationary) return;
         if (distanceToPlayer <= attackDistance)
         {
             navMeshAgent.isStopped = true;

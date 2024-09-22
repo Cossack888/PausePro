@@ -11,7 +11,7 @@ public class InteractionObject : MonoBehaviour, IProneToInteraction
     NavMeshAgent agent;
     EnemyAI enemyAI;
     Rigidbody rb;
-    bool inMotion;
+    public bool inMotion;
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -39,7 +39,7 @@ public class InteractionObject : MonoBehaviour, IProneToInteraction
             GetComponentInChildren<SpriteRenderer>().color = Color.white;
         }
 
-        Invoke("CheckForMotion", 0.5f);
+        Invoke("CheckForMotion", 0.1f);
         //Invoke("ResetBeingPushed", 5);
     }
 

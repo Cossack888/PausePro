@@ -5,16 +5,19 @@ using UnityEngine;
 public class HeavyObject : MonoBehaviour
 {
     Rigidbody rb;
+    InteractionObject interactionObject;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        interactionObject = GetComponent<InteractionObject>();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (rb.velocity.magnitude > 2f && collision.gameObject.CompareTag("Enemy"))
+        Debug.Log(collision.gameObject.name);
+        if ((interactionObject.inMotion || rb.velocity.magnitude > 2f) && collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<Health>().TakeDamage(200);
+            collision.gameObject.GetComponentInParent<Health>().TakeDamage(200);
         }
     }
 }

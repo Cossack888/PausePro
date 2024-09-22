@@ -5,18 +5,23 @@ using UnityEngine;
 public class EnemyProjectile : MonoBehaviour
 {
     float timer;
-    private void OnCollisionEnter(Collision collision)
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Wall"))
         {
-            collision.gameObject.GetComponent<PlayerHealth>().TakeDamage(1);
+            Destroy(gameObject);
+        }
+        if (other.gameObject.CompareTag("Player"))
+        {
+            other.gameObject.GetComponent<PlayerHealth>().TakeDamage(1);
             Destroy(gameObject);
         }
     }
     private void Update()
     {
         timer += Time.deltaTime;
-        if (timer > 3)
+        if (timer > 2)
         {
             Destroy(gameObject);
         }

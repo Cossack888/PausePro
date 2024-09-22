@@ -155,7 +155,6 @@ public class GhostForm : MovementType
         {
             if (ObjectProneToInteraction(hit.collider.gameObject))
             {
-                Debug.Log("Found with raycast: " + hit.collider.gameObject.name);
                 return hit.collider.gameObject;
             }
             else
@@ -188,7 +187,6 @@ public class GhostForm : MovementType
                 nearestObject = hit.gameObject;
             }
         }
-        Debug.Log("Found with overlapSphere: " + nearestObject.name);
         return nearestObject;
     }
 
