@@ -182,6 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75913d36d87f7ef4ab1899b000ce0b1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resetTimer: 10
 --- !u!1 &7884914470801169445
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,4 +280,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b5ba433c8ff54440ae62a4726cfb3ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  twoSided: 0

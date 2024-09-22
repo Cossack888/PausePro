@@ -47,7 +47,6 @@ public class Crouching : MovementType
     public override void UpdateMovement()
     {
         movement = new Vector3(playerAction.Movement.x, 0f, playerAction.Movement.y);
-        momentum.ModifyMomentum(-Time.deltaTime / 5);
         if (!playerAction.IsCrouching)
         {
             playerController.SetMovement(playerController.RegularMovement);
@@ -65,7 +64,7 @@ public class Crouching : MovementType
     {
         Vector3 localMovement = new Vector3(movement.x, 0, movement.z);
         Vector3 worldMovement = playerTransform.TransformDirection(localMovement);
-        Vector3 targetVelocity = (playerController.WalkSpeed + (momentum.CurrentMomentum / 2)) * worldMovement;
+        Vector3 targetVelocity = playerController.WalkSpeed * worldMovement;
         targetVelocity.y = playerRigidbody.velocity.y;
 
         playerRigidbody.velocity = targetVelocity;

@@ -20,8 +20,6 @@ public class RegularMovement : MovementType
     public override void UpdateMovement()
     {
         movement = new Vector3(playerAction.Movement.x, 0f, playerAction.Movement.y);
-        float slowMultiplier = playerAction.IsSprinting ? 5 : 10;
-        momentum.ModifyMomentum(-Time.deltaTime / slowMultiplier);
         if (playerAction.IsCrouching && !crouched)
         {
             crouched = true;
@@ -36,7 +34,7 @@ public class RegularMovement : MovementType
     {
         Vector3 localMovement = new Vector3(movement.x, 0, movement.z);
         Vector3 worldMovement = playerTransform.TransformDirection(localMovement);
-        Vector3 targetVelocity = (playerAction.IsSprinting ? playerController.RunSpeed + momentum.CurrentMomentum : playerController.WalkSpeed + momentum.CurrentMomentum) * worldMovement;
+        Vector3 targetVelocity = (playerAction.IsSprinting ? playerController.RunSpeed : playerController.WalkSpeed) * worldMovement;
         targetVelocity.y = playerRigidbody.velocity.y;
         playerRigidbody.velocity = targetVelocity;
     }

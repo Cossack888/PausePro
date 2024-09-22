@@ -654,8 +654,8 @@ MonoBehaviour:
   heart1: {fileID: 0}
   heart2: {fileID: 0}
   heart3: {fileID: 0}
-  heartFull: {fileID: 21300000, guid: 576d6a94c960cc649b571e219c81e655, type: 3}
-  heartEmpty: {fileID: 21300000, guid: 1d3a5b7434b350d41a1b5c7094fb336d, type: 3}
+  heartFull: {fileID: 1239216884, guid: 124c1b38c493cf547af3a7253a3683b1, type: 3}
+  heartEmpty: {fileID: -95277141, guid: ab81df4d6ab728e41974812093444cff, type: 3}
   deathScreen: {fileID: 0}
 --- !u!1 &5640226145584503234
 GameObject:

@@ -18,9 +18,11 @@ public class PlayerHealth : MonoBehaviour
     public Sprite heartFull;
     public Sprite heartEmpty;
     public GameObject deathScreen;
+    bool vulnerable = true;
     private void Start()
     {
         currentHealth = maxHealth;
+        vulnerable = true;
         image = hitScreen.GetComponent<Image>();
         color = image.color;
         color.a = 0;
@@ -29,43 +31,55 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        currentHealth -= damage;
-        color = image.color;
-        color.a = 1f;
-        image.color = color;
-        switch (currentHealth)
+        if (vulnerable)
         {
-            case 3:
-                heart1.sprite = heartFull;
-                heart2.sprite = heartFull;
-                heart3.sprite = heartFull;
-                break;
-            case 2:
-                heart1.sprite = heartFull;
-                heart2.sprite = heartFull;
-                heart3.sprite = heartEmpty;
-                break;
-            case 1:
-                heart1.sprite = heartFull;
-                heart2.sprite = heartEmpty;
-                heart3.sprite = heartEmpty;
-                break;
-            case 0:
-                heart1.sprite = heartEmpty;
-                heart2.sprite = heartEmpty;
-                heart3.sprite = heartEmpty;
-                break;
-            default:
-                heart1.sprite = heartEmpty;
-                heart2.sprite = heartEmpty;
-                heart3.sprite = heartEmpty;
-                break;
+            vulnerable = false;
+            currentHealth -= damage;
+            color = image.color;
+            color.a = 1f;
+            image.color = color;
+            StartCoroutine(ResetVulnerability());
+            switch (currentHealth)
+            {
+                case 3:
+                    heart1.sprite = heartFull;
+                    heart2.sprite = heartFull;
+                    heart3.sprite = heartFull;
+                    break;
+                case 2:
+                    heart1.sprite = heartFull;
+                    heart2.sprite = heartFull;
+                    heart3.sprite = heartEmpty;
+                    break;
+                case 1:
+                    heart1.sprite = heartFull;
+                    heart2.sprite = heartEmpty;
+                    heart3.sprite = heartEmpty;
+                    break;
+                case 0:
+                    heart1.sprite = heartEmpty;
+                    heart2.sprite = heartEmpty;
+                    heart3.sprite = heartEmpty;
+                    break;
+                default:
+                    heart1.sprite = heartEmpty;
+                    heart2.sprite = heartEmpty;
+                    heart3.sprite = heartEmpty;
+                    break;
 
+            }
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
         }
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
+
+    }
+
+    IEnumerator ResetVulnerability()
+    {
+        yield return new WaitForSeconds(1f);
+        vulnerable = true;
     }
 
     private void Update()

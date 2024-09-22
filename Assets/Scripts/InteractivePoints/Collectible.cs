@@ -1,21 +1,31 @@
+using System.Collections;
 using UnityEngine;
 
 public class Collectible : MonoBehaviour
 {
-    private Momentum momentum;
     private GameManager gameManager;
+    private Collider col;
+    [SerializeField] float resetTimer;
     private void Start()
     {
-        momentum = GameObject.FindObjectOfType<Momentum>();
         gameManager = GameObject.FindObjectOfType<GameManager>();
+        col = GetComponent<Collider>();
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            momentum.ModifyMomentum(1);
             gameManager.ChangeAmountOfBottles(1);
-            Destroy(gameObject);
+            col.enabled = false;
+            GetComponentInChildren<SpriteRenderer>().enabled = false;
+            StartCoroutine(ResetCollectible(resetTimer));
         }
+    }
+
+    IEnumerator ResetCollectible(float resetTimer)
+    {
+        yield return new WaitForSeconds(resetTimer);
+        GetComponentInChildren<SpriteRenderer>().enabled = true;
+        col.enabled = true;
     }
 }

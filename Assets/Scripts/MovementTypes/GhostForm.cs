@@ -59,7 +59,7 @@ public class GhostForm : MovementType
         Vector3 localMovement = new Vector3(movement.x, 0, 0);
         Vector3 worldMovement = playerTransform.TransformDirection(localMovement);
         Vector3 verticalMovement = cameraForward * movement.z;
-        Vector3 targetVelocity = (playerAction.IsSprinting ? playerController.RunSpeed + momentum.CurrentMomentum : playerController.WalkSpeed + momentum.CurrentMomentum) * (worldMovement + verticalMovement);
+        Vector3 targetVelocity = (playerAction.IsSprinting ? playerController.RunSpeed : playerController.WalkSpeed) * (worldMovement + verticalMovement);
         playerRigidbody.velocity = targetVelocity;
     }
 
@@ -90,7 +90,7 @@ public class GhostForm : MovementType
         {
             dashTimer = true;
             timeElapsed = 0;
-            playerRigidbody.AddForce(playerController.Cam.forward * playerController.DashForce * (1 + momentum.CurrentMomentum / 5));
+            playerRigidbody.AddForce(playerController.Cam.forward * playerController.DashForce);
         }
 
     }
@@ -246,6 +246,9 @@ public class GhostForm : MovementType
         {
             if (forceData != null && forceData.enemy != null)
                 forceData.enemy.ApplyForce(forceData.forceDirection, forceData.hitPoint);
+            if (forceData != null && forceData.interactionObject != null)
+                forceData.interactionObject.ApplyForce(forceData.forceDirection, forceData.hitPoint);
+
         }
 
         foreach (TurnOff turnOff in savedTurnOffs)

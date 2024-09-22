@@ -68,7 +68,6 @@ public class WallRun : MovementType
                 float playerRadius = playerCollider.radius;
                 if (Physics.Raycast(playerTransform.position, wallNormal, out RaycastHit hit, 10, playerController.WallMask))
                 {
-                    momentum.ModifyMomentum(0.5f);
                     float distanceToWall = Vector3.Distance(playerTransform.position, hit.point);
                     float stopDistance = playerRadius + 0.05f;
                     if (distanceToWall > stopDistance)
@@ -86,7 +85,7 @@ public class WallRun : MovementType
                 }
                 else
                 {
-                    momentum.ResetMomentum();
+
                     playerRigidbody.useGravity = true;
                     playerRigidbody.AddForce((wallNormal + wallRunDirection) * 400f, ForceMode.Impulse);
                 }
@@ -131,7 +130,7 @@ public class WallRun : MovementType
 
             if (IsWallRunning())
             {
-                playerRigidbody.velocity = wallRunDirection * (playerController.RunSpeed + momentum.CurrentMomentum);
+                playerRigidbody.velocity = wallRunDirection * (playerController.RunSpeed);
                 RotatePlayerToWallRunDirection();
             }
             else

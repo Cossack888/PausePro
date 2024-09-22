@@ -1,12 +1,13 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject enemyPrefab;
+    public GameObject[] enemyPrefab;
     public int numberOfEnemies = 10;
     public int maxEnemies = 50;
     public float spawnRadius = 10f;
@@ -27,8 +28,14 @@ public class EnemySpawner : MonoBehaviour
             Vector3 spawnLocation = GetRandomNavMeshPosition(spawnCenter.position, spawnRadius);
             if (spawnLocation != Vector3.zero)
             {
-                GameObject enemy = Instantiate(enemyPrefab, spawnLocation, Quaternion.identity);
-                enemies.Add(enemy);
+                Instantiate(enemyPrefab[Random.Range(0, enemyPrefab.Length)], spawnLocation, Quaternion.identity);
+            }
+        }
+        foreach (EnemyAI enemy in FindObjectsOfType<EnemyAI>())
+        {
+            if (!enemies.Contains(enemy.gameObject))
+            {
+                enemies.Add(enemy.gameObject);
             }
         }
     }

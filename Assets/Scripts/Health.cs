@@ -8,9 +8,12 @@ public class Health : MonoBehaviour
     private float currentHealth;
     Animator anim;
     public GameObject VFX;
+    public int points;
+    GameManager gameManager;
     private void Start()
     {
         anim = GetComponent<Animator>();
+        gameManager = FindObjectOfType<GameManager>();
         currentHealth = maxHealth;
     }
     public void TakeDamage(float damage)
@@ -38,6 +41,7 @@ public class Health : MonoBehaviour
 
     public void Die()
     {
+        gameManager.ChangeAmountOfPoints(points);
         GameObject tempVFX = Instantiate(VFX, transform.position, Quaternion.identity);
         Destroy(tempVFX, 2);
         Destroy(gameObject);

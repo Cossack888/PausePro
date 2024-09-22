@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class MeleeEnemy : EnemyAI
 {
-
     protected override IEnumerator Attack()
     {
         isAttacking = true;
+
         while (distanceToPlayer <= attackDistance)
         {
             anim.SetTrigger("Attack");
@@ -21,42 +21,38 @@ public class MeleeEnemy : EnemyAI
         col.enabled = false;
     }
 
-    protected override void Block()
-    {
-        throw new System.NotImplementedException();
-    }
-
     protected override void HandleCombat(float distanceToPlayer)
     {
         if (isStationary) return;
+
+        // Look at the player (ignore Y-axis)
         transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
-        navMeshAgent.isStopped=true;
+
+        navMeshAgent.isStopped = true;
+
         if (distanceToPlayer <= attackDistance)
         {
-            if (distanceToPlayer < 0.3f)
+            if (!isAttacking)
             {
-                navMeshAgent.Move(-transform.forward * Time.deltaTime);
-            }
-            else
-            {
-                StartAttacking();
+                StartCoroutine(Attack());
             }
         }
         else
         {
-            StopAttacking();
+            if (isAttacking)
+            {
+                StopCoroutine(Attack());
+                isAttacking = false;
+                col.enabled = false;
+            }
         }
     }
 
     protected override void HandleMovement()
     {
         if (isStationary) return;
+
         navMeshAgent.isStopped = false;
         navMeshAgent.destination = player.position;
-    }
-
-    protected override IEnumerator Throw()
-    {
-        throw new System.NotImplementedException();
     }
 }

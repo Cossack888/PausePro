@@ -6,7 +6,6 @@ public abstract class MovementType : IMovement
     protected Transform playerTransform;
     protected PlayerController playerController;
     protected PlayerAction playerAction;
-    protected Momentum momentum;
     protected Vector3 movement;
     protected bool crouched;
 
@@ -16,7 +15,6 @@ public abstract class MovementType : IMovement
         playerTransform = transform;
         playerController = controller;
         playerAction = action;
-        momentum = GameObject.FindObjectOfType<Momentum>();
 
     }
 

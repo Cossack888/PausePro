@@ -60,7 +60,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float defaultSensitivityY = 2f;
     private RegularMovement regularMovement;
     private Jumping jumping;
-    private Somersault somersault;
     private WallRun wallRun;
     private Crouching crouching;
     private CrouchJump crouchJump;
@@ -89,7 +88,6 @@ public class PlayerController : MonoBehaviour
     public Transform GroundCheck => groundCheck;
     public RegularMovement RegularMovement => regularMovement;
     public Jumping Jumping => jumping;
-    public Somersault Somersault => somersault;
     public WallRun WallRun => wallRun;
     public Crouching Crouching => crouching;
     public CrouchJump CrouchJump => crouchJump;
@@ -118,7 +116,6 @@ public class PlayerController : MonoBehaviour
         action = GetComponent<PlayerAction>();
         regularMovement = new RegularMovement(rb, transform, this, action);
         jumping = new Jumping(rb, transform, this, action);
-        somersault = new Somersault(rb, transform, this, action);
         wallRun = new WallRun(rb, transform, this, action);
         crouching = new Crouching(rb, transform, this, action);
         crouchJump = new CrouchJump(rb, transform, this, action);

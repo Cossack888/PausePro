@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7078084956795179988
+--- !u!1 &8939555089332323637
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,41 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8421089510633390384}
-  - component: {fileID: 8990431571039922312}
+  - component: {fileID: 1122508226212420070}
+  - component: {fileID: 5852821640476301498}
   m_Layer: 0
-  m_Name: GameMAnager 1
+  m_Name: EnemySPawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8421089510633390384
+--- !u!4 &1122508226212420070
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7078084956795179988}
+  m_GameObject: {fileID: 8939555089332323637}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.08, y: 0.37, z: -4.41}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8990431571039922312
+--- !u!114 &5852821640476301498
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7078084956795179988}
+  m_GameObject: {fileID: 8939555089332323637}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e51e1651f63f17468d0378be2b47f35, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b8bad1ae22b5ff4d8f1560db3a1248a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menu: {fileID: 0}
-  bottlesText: {fileID: 0}
+  enemyPrefab:
+  - {fileID: 4863620323423768947, guid: 70cf5aad4bf5a924dbff047c6ec90893, type: 3}
+  - {fileID: 7528600912958245929, guid: 0e4aeaa9ef983c54c9360de41063aa93, type: 3}
+  numberOfEnemies: 10
+  maxEnemies: 50
+  spawnRadius: 50
+  navMeshSampleDistance: 1
+  refreshTime: 10
+  spawnCenter: {fileID: 1122508226212420070}
