@@ -26,7 +26,7 @@ public class RegularMovement : MovementType
         Debug.Log("Entered Regular Form");
         playerAction.OnJumpGlobal += Jump;
         //playerAction.OnAttackGlobal += Attack;
-        playerAction.OnInteractGlobal += Push;
+        //playerAction.OnInteractGlobal += Push;
         playerAction.OnShootGlobal += Push;
         playerAction.OnGhostGlobal += Ghost;
 
@@ -38,7 +38,7 @@ public class RegularMovement : MovementType
 
         playerAction.OnJumpGlobal -= Jump;
         //playerAction.OnAttackGlobal -= Attack;
-        playerAction.OnInteractGlobal -= Push;
+        //playerAction.OnInteractGlobal -= Push;
         playerAction.OnShootGlobal -= Push;
         playerAction.OnGhostGlobal -= Ghost;
     }
@@ -67,11 +67,10 @@ public class RegularMovement : MovementType
 
     public void Push()
     {
-        ApplyForce();
-        // if (playerController.CurrentMovement == this)
-        // {
-        //     ApplyForce();
-        // }
+        if (playerController.CurrentMovement == this)
+        {
+            ApplyForce();
+        }
     }
 
     public void ApplyForce()
@@ -85,6 +84,7 @@ public class RegularMovement : MovementType
             EnemyAI enemy = objectInFocus.GetComponent<EnemyAI>();
             Debug.Log("enemy in focus: " + objectInFocus.name);
             Vector3 directionToTarget = enemy.transform.position - playerController.NormalCam.transform.position;
+
             enemy.ApplyForce(directionToTarget.normalized, enemy.transform.position, forceMuliplier);
         }
 
@@ -140,7 +140,7 @@ public class RegularMovement : MovementType
     {
         playerAction.OnJumpGlobal -= Jump;
         //playerAction.OnAttackGlobal -= Attack;
-        playerAction.OnInteractGlobal -= Push;
+        //playerAction.OnInteractGlobal -= Push;
         playerAction.OnShootGlobal -= Push;
         playerAction.OnGhostGlobal -= Ghost;
     }
