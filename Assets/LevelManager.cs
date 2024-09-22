@@ -11,4 +11,8 @@ public class LevelManager : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(sceneBuildIndex);
     }
+    public void Escape()
+    {
+        Application.Quit();
+    }
 }
