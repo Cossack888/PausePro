@@ -9,10 +9,9 @@ public class GameManager : MonoBehaviour
     private PlayerHealth health;
     public GameObject menu;
     public TMP_Text bottlesText;
-    public TMP_Text pointsText;
+
     bool menuActive;
     int bottles;
-    int points;
     private void Start()
     {
         action = GameObject.FindObjectOfType<PlayerAction>();
@@ -28,19 +27,12 @@ public class GameManager : MonoBehaviour
         bottles += amount;
         bottlesText.text = bottles.ToString();
     }
-    public void ChangeAmountOfPoints(int amount)
-    {
-        points += amount;
-        pointsText.text = points.ToString();
-    }
+
     public int GetBottles()
     {
         return bottles;
     }
-    public int GetPoints()
-    {
-        return points;
-    }
+
     public void ResetScene()
     {
         Time.timeScale = 1f;
