@@ -220,12 +220,12 @@ public class GhostForm : MovementType
 
         GameObject objectInFocus = FindObjectInFocus();
         //if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
-        if( objectInFocus != null)
+        if (objectInFocus != null)
         {
             TurnOff turnOff = objectInFocus.GetComponent<TurnOff>();
             InteractionObject hitObject = objectInFocus.gameObject.GetComponent<InteractionObject>();
             BreakableObject breakable = objectInFocus.GetComponent<BreakableObject>();
-
+            playerController.GhostLeftHand.SetTrigger("push");
             TurnColor(Color.red, objectInFocus);
             redObjects.Add(objectInFocus);
             if (breakable != null)
@@ -297,6 +297,7 @@ public class GhostForm : MovementType
             GameObject hitObject = hit.collider.gameObject;
             if (ObjectProneToInteraction(hitObject))
             {
+                playerController.GhostLeftHand.SetTrigger("pull");
                 hitObject.transform.position = playerTransform.position + playerTransform.forward;
                 TurnColor(Color.white, hitObject);
             }

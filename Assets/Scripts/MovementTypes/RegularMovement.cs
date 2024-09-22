@@ -60,6 +60,7 @@ public class RegularMovement : MovementType
                 NavMeshAgent navMeshAgent = hit.collider.GetComponent<NavMeshAgent>();
                 EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
                 Rigidbody rb = hitObject.GetComponent<Rigidbody>();
+                playerController.LeftHand.SetTrigger("push");
                 rb.isKinematic = false;
                 if (navMeshAgent != null)
                 {

@@ -165,28 +165,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (ghostLeftHand.isActiveAndEnabled)
-            {
-                ghostLeftHand.SetTrigger("spell");
-            }
-            else if (leftHand.isActiveAndEnabled)
-            {
-                leftHand.SetTrigger("spell");
-            }
-        }
-        if (Input.GetMouseButtonDown(2))
-        {
-            if (ghostLeftHand.isActiveAndEnabled)
-            {
-                ghostLeftHand.SetTrigger("push");
-            }
-            else if (leftHand.isActiveAndEnabled)
-            {
-                leftHand.SetTrigger("push");
-            }
-        }
+
         currentMovement?.UpdateMovement();
     }
     private void FixedUpdate()
