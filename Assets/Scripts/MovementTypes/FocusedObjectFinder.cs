@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class FocusedObjectFinder : MonoBehaviour
+public class FocusedObjectFinder
 {
     private PlayerController playerController;
     private Transform playerTransform;
@@ -57,7 +57,7 @@ public class FocusedObjectFinder : MonoBehaviour
             Vector3 directionToObject = hit.transform.position - camera.position;
             float angle = Vector3.Angle(camera.forward, directionToObject);
 
-            if (angle < lowestAngle && ObjectProneToInteraction(hit.gameObject))
+            if (angle < lowestAngle && InteractionUtils.ObjectProneToInteraction(hit.gameObject))
             {
                 //check line of sight - OverlapSphere goes through walls
                 //use AllLayers - the Raycast might go throught walls otherwise (?)

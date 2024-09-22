@@ -6,12 +6,16 @@ using UnityEngine.AI;
 public class RegularMovement : MovementType
 {
 
+    private FocusedObjectFinder focusedObjectFinder;
+
     public RegularMovement(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
         action.OnJumpGlobal += Jump;
-        action.OnAttackGlobal += Attack;
+        //action.OnAttackGlobal += Attack;
         action.OnInteractGlobal += Push;
         action.OnGhostGlobal += Ghost;
+
+        focusedObjectFinder= new FocusedObjectFinder(controller, transform);
     }
     public override void EnterMovement()
     {
@@ -49,11 +53,14 @@ public class RegularMovement : MovementType
 
     public void ApplyForce()
     {
-        Vector3 start = playerTransform.position;
-        Vector3 direction = playerController.Cam.transform.forward;
+        
+        GameObject objectInFocus = focusedObjectFinder.FindObjectInFocus();
 
-        if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
+        EnemyAI enemy = objectInFocus.GetComponent<EnemyAI>();
+
+        if (enemy != null)
         {
+<<<<<<< HEAD
             InteractionObject hitObject = hit.collider.gameObject.GetComponent<InteractionObject>();
             if (hitObject != null && !hitObject.hasBeenPushed)
             {
@@ -75,7 +82,38 @@ public class RegularMovement : MovementType
 
                 hitObject.Push();
             }
+=======
+            Vector3 directionToTarget = enemy.transform.position - playerController.NormalCam.transform.position;
+            enemy.ApplyForce(directionToTarget, enemy.transform.position);
+>>>>>>> 1a1e0ed (Use loose aim in regular form)
         }
+
+        // Vector3 start = playerTransform.position;
+        // Vector3 direction = playerController.Cam.transform.forward;
+
+        // if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
+        // {
+        //     InteractionObject hitObject = hit.collider.gameObject.GetComponent<InteractionObject>();
+        //     if (hitObject != null && !hitObject.hasBeenPushed)
+        //     {
+        //         NavMeshAgent navMeshAgent = hit.collider.GetComponent<NavMeshAgent>();
+        //         EnemyAI enemy = hit.collider.GetComponent<EnemyAI>();
+        //         Rigidbody rb = hitObject.GetComponent<Rigidbody>();
+        //         rb.isKinematic = false;
+        //         if (navMeshAgent != null)
+        //         {
+        //             navMeshAgent.enabled = false;
+        //         }
+        //         if (enemy != null)
+        //         {
+        //             enemy.enabled = false;
+        //         }
+        //         Vector3 forceDirection = (hit.point - start).normalized;
+        //         rb.AddForceAtPosition(forceDirection * 10, hit.point, ForceMode.Impulse);
+
+        //         hitObject.Push();
+        //     }
+        // }
     }
 
     public void Jump()
@@ -101,7 +139,7 @@ public class RegularMovement : MovementType
     ~RegularMovement()
     {
         playerAction.OnJumpGlobal -= Jump;
-        playerAction.OnAttackGlobal -= Attack;
+        //playerAction.OnAttackGlobal -= Attack;
         playerAction.OnInteractGlobal -= Push;
         playerAction.OnGhostGlobal -= Ghost;
     }
