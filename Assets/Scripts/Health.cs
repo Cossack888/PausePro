@@ -10,6 +10,7 @@ public class Health : MonoBehaviour
     public GameObject VFX;
     public int points;
     WinTotem winTotem;
+    public bool Boss;
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -41,6 +42,7 @@ public class Health : MonoBehaviour
 
     public void Die()
     {
+        if (Boss) { winTotem.victoryCondition = true; }
         winTotem.AddPoints(points);
         GameObject tempVFX = Instantiate(VFX, transform.position, Quaternion.identity);
         Destroy(tempVFX, 2);

@@ -37,21 +37,23 @@ public abstract class EnemyAI : MonoBehaviour
             col.enabled = false;
             return;
         }
-
-        if (distanceToPlayer < noticeDistance)
+        if (navMeshAgent.enabled == true)
         {
-            if (distanceToPlayer <= attackDistance)
+            if (distanceToPlayer < noticeDistance)
             {
-                HandleCombat(distanceToPlayer);
+                if (distanceToPlayer <= attackDistance)
+                {
+                    HandleCombat(distanceToPlayer);
+                }
+                else
+                {
+                    HandleMovement();
+                }
             }
             else
             {
-                HandleMovement();
+                Patrol();
             }
-        }
-        else
-        {
-            Patrol();
         }
     }
 

@@ -56,6 +56,11 @@ public class WinTotem : MonoBehaviour
         }
     }
 
+    public void EndGame()
+    {
+        CheckAndUpdateHighScore();
+        SceneManager.LoadScene(winningScreenIndex);
+    }
     private void OnEnable()
     {
         actions = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAction>();

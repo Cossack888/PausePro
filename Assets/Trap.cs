@@ -14,7 +14,7 @@ public class Trap : MonoBehaviour
         timerOn = true;
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<Health>().TakeDamage(200);
+            collision.gameObject.GetComponentInParent<Health>().TakeDamage(200);
         }
         if (collision.gameObject.CompareTag("Player"))
         {

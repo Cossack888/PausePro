@@ -203,6 +203,7 @@ MonoBehaviour:
   maxHealth: 1000
   VFX: {fileID: 5649109544252588545, guid: 9431234962a70e74cb80666d07721d84, type: 3}
   points: 10
+  Boss: 1
 --- !u!54 &8530367389189305634
 Rigidbody:
   m_ObjectHideFlags: 0
