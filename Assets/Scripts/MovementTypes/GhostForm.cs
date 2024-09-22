@@ -28,7 +28,7 @@ public class GhostForm : MovementType
     {
         action.OnParkourGlobal += InitializeDash;
         action.OnGhostGlobal += LeaveGhostForm;
-        action.OnAttackGlobal += TransportObjectToPlayer;
+        action.OnInteractGlobal += TransportObjectToPlayer;
         action.OnShootGlobal += SaveForce;
         gameManager = GameObject.FindObjectOfType<GameManager>();
     }
@@ -366,7 +366,7 @@ public class GhostForm : MovementType
     {
         playerAction.OnParkourGlobal -= InitializeDash;
         playerAction.OnGhostGlobal -= LeaveGhostForm;
-        playerAction.OnAttackGlobal -= TransportObjectToPlayer;
+        playerAction.OnInteractGlobal -= TransportObjectToPlayer;
         playerAction.OnShootGlobal -= SaveForce;
     }
 }
