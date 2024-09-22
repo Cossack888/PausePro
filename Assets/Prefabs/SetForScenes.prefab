@@ -5593,6 +5593,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 332021327476772738}
     m_Modifications:
+    - target: {fileID: 2647658995780487608, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
+      propertyPath: m_Volume
+      value: 0.207
+      objectReference: {fileID: 0}
     - target: {fileID: 4187158333746844759, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
       propertyPath: musicVolumeSlider
       value: 
@@ -5603,7 +5607,11 @@ PrefabInstance:
       objectReference: {fileID: 8691640791045806556}
     - target: {fileID: 4187158333746844759, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
       propertyPath: fleshMusic.Array.size
-      value: 3
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4187158333746844759, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
+      propertyPath: ghostMusic.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4187158333746844759, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
       propertyPath: fleshMusic.Array.data[0]
@@ -5612,11 +5620,19 @@ PrefabInstance:
     - target: {fileID: 4187158333746844759, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
       propertyPath: fleshMusic.Array.data[1]
       value: 
-      objectReference: {fileID: 8300000, guid: 794d3e7297abe4845ad9a8e07078c78c, type: 3}
+      objectReference: {fileID: 8300000, guid: 2de4734af03689b4b83d2a156e462a89, type: 3}
     - target: {fileID: 4187158333746844759, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
       propertyPath: fleshMusic.Array.data[2]
       value: 
       objectReference: {fileID: 8300000, guid: 2de4734af03689b4b83d2a156e462a89, type: 3}
+    - target: {fileID: 4187158333746844759, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
+      propertyPath: ghostMusic.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 7bc42094278fbb449b7cbbe63ea16e73, type: 3}
+    - target: {fileID: 5712134841369305301, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
+      propertyPath: m_Volume
+      value: 0.181
+      objectReference: {fileID: 0}
     - target: {fileID: 6810525501743744384, guid: 72485e09f9c3c3341ae3ac3afd8670e4, type: 3}
       propertyPath: m_Name
       value: AudioManager
