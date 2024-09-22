@@ -75,7 +75,40 @@ public class PlayerHealth : MonoBehaviour
         }
 
     }
+    public void AddHealth(int amount)
+    {
+        currentHealth += amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        switch (currentHealth)
+        {
+            case 3:
+                heart1.sprite = heartFull;
+                heart2.sprite = heartFull;
+                heart3.sprite = heartFull;
+                break;
+            case 2:
+                heart1.sprite = heartFull;
+                heart2.sprite = heartFull;
+                heart3.sprite = heartEmpty;
+                break;
+            case 1:
+                heart1.sprite = heartFull;
+                heart2.sprite = heartEmpty;
+                heart3.sprite = heartEmpty;
+                break;
+            case 0:
+                heart1.sprite = heartEmpty;
+                heart2.sprite = heartEmpty;
+                heart3.sprite = heartEmpty;
+                break;
+            default:
+                heart1.sprite = heartEmpty;
+                heart2.sprite = heartEmpty;
+                heart3.sprite = heartEmpty;
+                break;
 
+        }
+    }
     IEnumerator ResetVulnerability()
     {
         yield return new WaitForSeconds(1f);

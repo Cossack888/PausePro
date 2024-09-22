@@ -183,6 +183,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resetTimer: 10
+  heart: 0
+  flask: 1
 --- !u!1 &7884914470801169445
 GameObject:
   m_ObjectHideFlags: 0
