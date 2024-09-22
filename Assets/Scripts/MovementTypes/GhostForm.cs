@@ -27,16 +27,21 @@ public class GhostForm : MovementType
     private FocusedObjectFinder focusedObjectFinder;
     public GhostForm(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
-        action.OnParkourGlobal += InitializeDash;
-        action.OnGhostGlobal += LeaveGhostForm;
-        action.OnInteractGlobal += TransportObjectToPlayer;
-        action.OnShootGlobal += SaveForce;
+        // action.OnParkourGlobal += InitializeDash;
+        // action.OnGhostGlobal += LeaveGhostForm;
+        // action.OnInteractGlobal += TransportObjectToPlayer;
+        // action.OnShootGlobal += SaveForce;
         gameManager = GameObject.FindObjectOfType<GameManager>();
         focusedObjectFinder= new FocusedObjectFinder(controller, transform);
     }
 
     public override void EnterMovement()
     {
+        playerAction.OnParkourGlobal += InitializeDash;
+        playerAction.OnGhostGlobal += LeaveGhostForm;
+        playerAction.OnInteractGlobal += TransportObjectToPlayer;
+        playerAction.OnShootGlobal += SaveForce;
+
         cooldown = gameManager.GetBottles() * 10;
         gameManager.ChangeAmountOfBottles(-gameManager.GetBottles());
         previousPosition = playerTransform.position;
@@ -349,6 +354,10 @@ public class GhostForm : MovementType
 
     public void LeaveGhostForm()
     {
+        playerAction.OnParkourGlobal -= InitializeDash;
+        playerAction.OnGhostGlobal -= LeaveGhostForm;
+        playerAction.OnInteractGlobal -= TransportObjectToPlayer;
+        playerAction.OnShootGlobal -= SaveForce;
         if (playerController.CurrentMovement == this && timer > 1)
         {
             playerController.SetMovement(playerController.RegularMovement);

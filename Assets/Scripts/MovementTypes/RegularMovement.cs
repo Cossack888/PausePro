@@ -10,17 +10,33 @@ public class RegularMovement : MovementType
 
     public RegularMovement(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
-        action.OnJumpGlobal += Jump;
-        //action.OnAttackGlobal += Attack;
-        action.OnInteractGlobal += Push;
-        action.OnGhostGlobal += Ghost;
+        // action.OnJumpGlobal += Jump;
+        // //action.OnAttackGlobal += Attack;
+        // action.OnInteractGlobal += Push;
+        // action.OnGhostGlobal += Ghost;
 
         focusedObjectFinder= new FocusedObjectFinder(controller, transform);
     }
     public override void EnterMovement()
     {
+        playerAction.OnJumpGlobal += Jump;
+        //playerAction.OnAttackGlobal += Attack;
+        //playerAction.OnInteractGlobal += Push;
+        playerAction.OnShootGlobal += Push;
+        playerAction.OnGhostGlobal += Ghost;
+
         playerRigidbody.velocity = new Vector3(0, 0, 0);
     }
+
+    public override void ExitMovement()
+    {
+        playerAction.OnJumpGlobal -= Jump;
+        //playerAction.OnAttackGlobal -= Attack;
+        //playerAction.OnInteractGlobal -= Push;
+        playerAction.OnShootGlobal -= Push;
+        playerAction.OnGhostGlobal -= Ghost;
+    }
+
     public override void UpdateMovement()
     {
         movement = new Vector3(playerAction.Movement.x, 0f, playerAction.Movement.y);
@@ -140,7 +156,8 @@ public class RegularMovement : MovementType
     {
         playerAction.OnJumpGlobal -= Jump;
         //playerAction.OnAttackGlobal -= Attack;
-        playerAction.OnInteractGlobal -= Push;
+        //playerAction.OnInteractGlobal -= Push;
+        playerAction.OnShootGlobal -= Push;
         playerAction.OnGhostGlobal -= Ghost;
     }
 }
