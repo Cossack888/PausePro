@@ -24,6 +24,7 @@ public class GhostForm : MovementType
     private List<GameObject> greenObjects = new List<GameObject>();
     private GameObject highlightedObject;
     private GameManager gameManager;
+    private FocusedObjectFinder focusedObjectFinder;
     public GhostForm(Rigidbody rb, Transform transform, PlayerController controller, PlayerAction action) : base(rb, transform, controller, action)
     {
         action.OnParkourGlobal += InitializeDash;
@@ -31,6 +32,7 @@ public class GhostForm : MovementType
         action.OnInteractGlobal += TransportObjectToPlayer;
         action.OnShootGlobal += SaveForce;
         gameManager = GameObject.FindObjectOfType<GameManager>();
+        focusedObjectFinder= new FocusedObjectFinder(controller, transform);
     }
 
     public override void EnterMovement()
@@ -130,7 +132,7 @@ public class GhostForm : MovementType
             return;
         }
 
-        GameObject currentFocusedObject = FindObjectInFocus();
+        GameObject currentFocusedObject = focusedObjectFinder.FindObjectInFocus();
 
         if (highlightedObject != null && highlightedObject != currentFocusedObject)
         {
@@ -145,69 +147,69 @@ public class GhostForm : MovementType
         highlightedObject = currentFocusedObject;
     }
 
-    GameObject FindObjectInFocus()
-    {
-        GameObject objectInFocus = FindObjectInFocusWithRaycast();
-        if (objectInFocus == null)
-        {
-            objectInFocus = FindObjectInFocusWithOverlapSphere();
-        }
-        return objectInFocus;
-    }
+    // GameObject FindObjectInFocus()
+    // {
+    //     GameObject objectInFocus = FindObjectInFocusWithRaycast();
+    //     if (objectInFocus == null)
+    //     {
+    //         objectInFocus = FindObjectInFocusWithOverlapSphere();
+    //     }
+    //     return objectInFocus;
+    // }
 
-    GameObject FindObjectInFocusWithRaycast()
-    {
-        if (Physics.Raycast(playerController.Cam.position, playerController.Cam.forward, out RaycastHit hit, Mathf.Infinity, playerController.GhostInteractionLayer))
-        {
-            if (ObjectProneToInteraction(hit.collider.gameObject))
-            {
-                //Debug.Log("Found object with raycast:" + hit.collider.gameObject.name);
-                return hit.collider.gameObject;
-            }
-            else
-            {
-                return null;
-            }
-        }
-        return null;
-    }
+    // GameObject FindObjectInFocusWithRaycast()
+    // {
+    //     if (Physics.Raycast(playerController.Cam.position, playerController.Cam.forward, out RaycastHit hit, Mathf.Infinity, playerController.GhostInteractionLayer))
+    //     {
+    //         if (InteractionUtils.ObjectProneToInteraction(hit.collider.gameObject))
+    //         {
+    //             //Debug.Log("Found object with raycast:" + hit.collider.gameObject.name);
+    //             return hit.collider.gameObject;
+    //         }
+    //         else
+    //         {
+    //             return null;
+    //         }
+    //     }
+    //     return null;
+    // }
 
-    GameObject FindObjectInFocusWithOverlapSphere()
-    {
-        float sphereRadius = 10000.0f;
-        LayerMask targetMask = Physics.AllLayers;
-        Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, sphereRadius, targetMask);
+    // GameObject FindObjectInFocusWithOverlapSphere()
+    // {
+    //     float sphereRadius = 10000.0f;
+    //     LayerMask targetMask = Physics.AllLayers;
+    //     Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, sphereRadius, targetMask);
 
-        Transform camera = playerController.GhostCam.transform;
+    //     Transform camera = playerController.GhostCam.transform;
 
-        GameObject nearestObject = null;
-        float lowestAngle = Mathf.Infinity;
+    //     GameObject nearestObject = null;
+    //     float lowestAngle = Mathf.Infinity;
 
-        foreach (Collider hit in hitColliders)
-        {
-            Vector3 directionToObject = hit.transform.position - camera.position;
-            float angle = Vector3.Angle(camera.forward, directionToObject);
+    //     foreach (Collider hit in hitColliders)
+    //     {
+    //         Vector3 directionToObject = hit.transform.position - camera.position;
+    //         float angle = Vector3.Angle(camera.forward, directionToObject);
 
-            if (angle < lowestAngle && ObjectProneToInteraction(hit.gameObject))
-            {
-                //check line of sight - OverlapSphere goes through walls
-                //use AllLayers - the Raycast might go throught walls otherwise (?)
-                if (Physics.Raycast(playerController.Cam.position, directionToObject, out RaycastHit raycastHit, Mathf.Infinity, Physics.AllLayers))
-                {
-                    if (raycastHit.collider.gameObject != hit.gameObject)
-                    {
-                        continue;
-                    }
-                    lowestAngle = angle;
-                    nearestObject = hit.gameObject;
-                }
-            }
-        }
-        // if(nearestObject!= null) {
-        //     Debug.Log("Found object with overlap sphere:" + nearestObject.name);
-        // }
-        return nearestObject;
-    }
+    //         if (angle < lowestAngle && InteractionUtils.ObjectProneToInteraction(hit.gameObject))
+    //         {
+    //             //check line of sight - OverlapSphere goes through walls
+    //             //use AllLayers - the Raycast might go throught walls otherwise (?)
+    //             if (Physics.Raycast(playerController.Cam.position, directionToObject, out RaycastHit raycastHit, Mathf.Infinity, Physics.AllLayers))
+    //             {
+    //                 if (raycastHit.collider.gameObject != hit.gameObject)
+    //                 {
+    //                     continue;
+    //                 }
+    //                 lowestAngle = angle;
+    //                 nearestObject = hit.gameObject;
+    //             }
+    //         }
+    //     }
+    //     // if(nearestObject!= null) {
+    //     //     Debug.Log("Found object with overlap sphere:" + nearestObject.name);
+    //     // }
+    //     return nearestObject;
+    // }
 
 
 
@@ -218,7 +220,7 @@ public class GhostForm : MovementType
         Vector3 direction = playerController.Cam.transform.forward;
         Debug.DrawRay(start, direction * playerController.GhostInteractionDistance, Color.red);
 
-        GameObject objectInFocus = FindObjectInFocus();
+        GameObject objectInFocus =  focusedObjectFinder.FindObjectInFocus();
         //if (Physics.Raycast(start, direction, out RaycastHit hit, playerController.GhostInteractionDistance, playerController.GhostInteractionLayer))
         if (objectInFocus != null)
         {
@@ -295,7 +297,7 @@ public class GhostForm : MovementType
         if (Physics.Raycast(playerTransform.position, playerTransform.forward, out RaycastHit hit, Mathf.Infinity, mask))
         {
             GameObject hitObject = hit.collider.gameObject;
-            if (ObjectProneToInteraction(hitObject))
+            if (InteractionUtils.ObjectProneToInteraction(hitObject))
             {
                 playerController.GhostLeftHand.SetTrigger("pull");
                 hitObject.transform.position = playerTransform.position + playerTransform.forward;
@@ -313,7 +315,7 @@ public class GhostForm : MovementType
         foreach (Collider hit in hitColliders)
         {
             greenObjects.Add(hit.gameObject);
-            if (ObjectProneToInteraction(hit.gameObject))
+            if (InteractionUtils.ObjectProneToInteraction(hit.gameObject))
                 TurnColor(color, hit.gameObject);
         }
 
@@ -330,13 +332,6 @@ public class GhostForm : MovementType
     }
 
 
-
-    public bool ObjectProneToInteraction(GameObject gameObject)
-    {
-        if (gameObject.GetComponent<BreakableObject>() != null || gameObject.GetComponent<InteractionObject>() != null || gameObject.GetComponent<TurnOff>() != null)
-            return true;
-        else return false;
-    }
     public void TurnColor(Color color, GameObject hitData)
     {
         if (!redObjects.Contains(hitData))
